@@ -1,0 +1,35 @@
+        <Box
+            component="form"
+            sx={{
+                '& > :not(style)': { m: 1, width: '25ch' },
+            }}
+            noValidate
+            autoComplete="off"
+            >
+            <TextField id="outlined-basic" label="Nom du fichier" variant="outlined" onChange={ (e) => setDocumentName(e.target.value)} />            
+            
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>                
+                    <DatePicker label="Date d'expiration" onChange={handleDocumentDate} views={['day', 'month', 'year']} />
+                </DemoContainer>
+            </LocalizationProvider>
+            <InputLabel id="demo-simple-select-label">Age</InputLabel>
+            <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={documentType}
+                label="Age"
+                onChange={handleChangeDocType}
+            >
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
+            <MuiFileInput value={documentFile} onChange={handleFileOnChange} /> 
+            <Stack direction="row" spacing={2}>
+                <Button variant="contained" endIcon={<SendIcon />} onClick={handleSendData}>
+                    Envoyer
+                </Button>
+            </Stack>
+            
+        </Box>
