@@ -29,7 +29,7 @@ function App() {
   ) : (
     <>
     <Toaster position='top-right' reverseOrder={false} containerClassName='overflow-auto'/>      
-    <Routes>
+    <Routes location="history">
       <Route path="/auth/signin" element={<SignIn />} />
       <Route path="/auth/signup" element={<SignUp />} />        
       <Route element={<DefaultLayout />}>
