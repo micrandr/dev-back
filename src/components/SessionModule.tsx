@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import Select from 'react-select'
@@ -28,25 +28,35 @@ const top100Films = [
     { label: 'Bureau Gilles', year: 1974 },
 ]
 
-const moduleListData = [
-    { label: 'Formation en BTP dpa', year: 1994 },
-    { label: 'Formation Office 365 taratata	', year: 1972 },
-    { label: 'La Dématérialisation des Marchés Publics MAPA', year: 1974 },
-    { label: 'Atelier - mémoire technique spécial BTP', year: 1974 },
-    { label: 'Variations de prix dans les marchés publics', year: 1974 },
-    { label: 'Compte PRORATA', year: 1974 },
-    { label: 'Formation en comptabilité analytique', year: 1974 },
-   
-]
+// const moduleListData = [
+//     { label: 'Formation en BTP dpa', year: 1994 },
+//     { label: 'Formation Office 365 taratata	', year: 1972 },
+//     { label: 'La Dématérialisation des Marchés Publics MAPA', year: 1974 },
+//     { label: 'Atelier - mémoire technique spécial BTP', year: 1974 },
+//     { label: 'Variations de prix dans les marchés publics', year: 1974 },
+//     { label: 'Compte PRORATA', year: 1974 },
+//     { label: 'Formation en comptabilité analytique', year: 1974 },   
+// ]
+
+const moduleListData = []
 
 
 
 export const BlocModule = ({ module, index, removeModule, countModule }) => {
 
     index = index + 1
+    const placeMaxRef = useRef()
     
+    const [modulesData, setModulesData] = useState<String[]>(moduleListData)
+    const [currentModuleData, setCurrentModuleData] = useState('')    
+
     const [moduleTitle, setModuleTitle] = useState('')
     const [modulePrice, setModulePrice] = useState('')
+    const [moduleHour, setModuleHour] = useState('')
+    const [modulePlaceMax, setModulePlaceMax] = useState('')
+    const [modulePlaceMin, setModulePlaceMin] = useState('')
+
+
     const [moduleName, setModuleName] = useState('')
     const [sessionModulePrice1, setSessionModulePrice1] = useState('')
     const [sessionModuleStartDate1, setSessionModuleStartDate1] = useState('')
@@ -74,6 +84,8 @@ export const BlocModule = ({ module, index, removeModule, countModule }) => {
     let fieldModuleEndDate = 'session-module-end-date'
     let fieldModuleHour = 'session-module-hour'
     let fieldModuleType = 'session-type'
+    let fieldModulePlaceMax = 'course-module-place-max'
+    let fieldModulePlaceMin = 'course-module-place-min'
     fieldModuleTitleName += index
     fieldModulePrice += index
     fieldModulePriceClient += index
@@ -81,12 +93,12 @@ export const BlocModule = ({ module, index, removeModule, countModule }) => {
     fieldModuleEndDate+=index
     fieldModuleHour+=index
     fieldModuleType+=index
+    fieldModulePlaceMax+=index
+    fieldModulePlaceMin+=index
 
-    const handleChangeModuleName = (e) => {
-
-        setModuleName(e.value)
-
-    }
+    // const handleChangeModuleName = (e) => {
+    //     setModuleName(e.value)
+    // }
 
     const handleChangeSessionType  = (event, value) => {
         let bgColor = ''
@@ -107,11 +119,19 @@ export const BlocModule = ({ module, index, removeModule, countModule }) => {
     }
 
     const retrieveCourseModule = () => {
-        CourseService.getAll()
+        
+        CourseService.getAll()    
         .then( (response ) => {
-            console.log( response.data['hydra:member'] )
+            response.data['hydra:member'].map( (value, index)=>{                
+                moduleListData.push({value: value.id, label: value.courseName})
+            })          
         })
     }
+
+    useEffect(() => {
+        retrieveCourseModule()         
+    
+    }, []);
 
     const handleChangeModulePrice = (e) => {
         countModule(e.target.value); 
@@ -119,7 +139,17 @@ export const BlocModule = ({ module, index, removeModule, countModule }) => {
     }    
 
     const handleChangeModuleListPicker = (event, data) => {        
-        console.log(data.label)
+        let moduleId = data.value
+         CourseModule.get(moduleId)
+         .then( (response)=>{
+            setCurrentModuleData(response.data)
+            setModulePrice(response.data.courseModulePrice)            
+            setModuleHour(response.data.courseModuleHours)
+            setModulePlaceMax(response.data.courseModulePlaceMaxi)
+            setModulePlaceMin(response.data.courseModulePlaceMini)
+            placeMaxRef.current.focus
+         })
+        
     }
 
     return (
@@ -143,6 +173,7 @@ export const BlocModule = ({ module, index, removeModule, countModule }) => {
                 name={fieldModuleTitleName}
                 options={moduleListData}
                 onChange={handleChangeModuleListPicker}
+                rel={index}
                 sx={{ width: 480 }}
                 className="mb-2"
                 renderInput={(params) => <TextField {...params} label="Nom du module" /> }
@@ -206,6 +237,7 @@ export const BlocModule = ({ module, index, removeModule, countModule }) => {
                             id={fieldModuleHour}
                             name={fieldModuleHour}
                             onChange={(e) => countModule(e.target.value)}
+                            value={moduleHour}
                             placeholder="Heures" 
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" 
                         />
@@ -248,16 +280,7 @@ export const BlocModule = ({ module, index, removeModule, countModule }) => {
                         />
                     </div>
                     <div className="w-full xl:w-1/4 hidden">
-                        
-                        {/* <label className="mb-2.5 block text-black dark:text-white">Lieu</label> 
-                            <input 
-                            type="text" 
-                            id={fieldModulePrice}
-                            name={fieldModulePrice}
-                            onChange={(e) => countModule(e.target.value)}
-                            placeholder="Lieu de formation"                             
-                            className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary" 
-                        /> */}
+                       
                         <TextField id="lieu-formation" label="Lieu de formation" variant="outlined" />
                     </div>
                     <div className="w-full xl:w-1/4">
@@ -272,10 +295,10 @@ export const BlocModule = ({ module, index, removeModule, countModule }) => {
                         />
                     </div>
                     <div className="w-full xl:w-1/4">
-                        <TextField label="Place Min." />
+                        <TextField label="Place Min." name={fieldModulePlaceMax} value={modulePlaceMin} />
                     </div>
                     <div className="w-full xl:w-1/4">
-                        <TextField label="Place Max." />
+                        <TextField label="Place Max." ref={placeMaxRef} name={fieldModulePlaceMin} value={modulePlaceMax} />
                     </div>
                 </div>
                 <div className="mb-4.5 flex flex-col gap-3 xl:flex-row">
