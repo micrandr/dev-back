@@ -26,6 +26,7 @@ const ListUserAccess = lazy(() => import('../pages/Users/ListUserAccess'));
 const ListCompagnies = lazy(() => import('../pages/Users/ListCompagnies'));
 const CreateCompany = lazy(() => import('../pages/Users/CreateCompany'));
 const EditCompany = lazy(() => import('../pages/Users/EditCompany'));
+const CreateUserSkills = lazy(() => import('../pages/Users/CreateUserSkills'));
 const ListCourses = lazy(() => import('../pages/Courses/ListCourses'));
 const CreateCourse = lazy(() => import('../pages/Courses/CreateCourse'));
 const EditCourse = lazy(() => import('../pages/Courses/EditCourse'));
@@ -170,6 +171,11 @@ const coreRoutes = [
     title: 'Fiche utilisateur',
     component: FicheUsers,
   },
+  {
+    path: '/userskills/create',
+    title: 'Fiche compétences',
+    component: CreateUserSkills,
+  },  
   {
     path: '/useraccess',
     title: 'UsersAccess',

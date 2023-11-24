@@ -1,218 +1,138 @@
-import React, { useRef, useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useRef, useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
-import Select from 'react-select'
-import countryList from 'react-select-country-list'
 import SwitcherQuailopi from './SwitcherQuailopi';
 import SwitcherTVA from './SwitcherTVA';
-//import axios from '../api/axios';
-import UserService from '../services/UserServices';
-import DocumentManager from "./Documents/DocumentManager";
-import DocumentList from "./Documents/DocumentList";
-import DocumentServices from "../services/DocumentServices";
+import axios from '../api/axios';
+import Select from 'react-select'
+import countryList from 'react-select-country-list'
+import UserService from "../services/UserServices";
 
+const REGISTER_URL = '/users';
 
-//import ListUserType from "./Lists/ListUserType";
-
-const USER_GET_URL = '/users/';
-
-const DataEditUser = () => {
+const DataCreateUserSkills = () => {
 
     const navigate = useNavigate();
-    const params = useParams();
-    const userId = params.id;
 
-    
-
-    const initialUserDataState = {
-        id: null,
-        userName: "",
-        userFirstname: "",
-        userPhone: "",
-        userAddress: "",
-        comment: "",
-      };
-
-    const [userData, setUserData] = useState(initialUserDataState);
-    const [currentUser, setCurrentUser] = useState(initialUserDataState);
     const [userFirstName, setUserFirstName] = useState('');
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [userPhone, setUserPhone] = useState('');
     const [userMobile, setUserMobile] = useState('');
     const [userAddress, setUserAddress] = useState('');
-    const [userPostalCode, setUserPostalCode] = useState('');
-    const [userDepartment, setUserDepartment] = useState('');
-    const [userCountry, setUserCountry] = useState('');
+    const [userDepartment, setUserDepartment] = useState('');    
+    const [userPostalCode, setUserPostalCode] = useState('');    
+    const [userCountry, setUserCountry] = useState('');    
     const [userGmapLink, setUserGMapLink] = useState('');
     const [userSkills, setUserSkills] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [companyType, setCompanyType] = useState('');
     const [companyTva, setCompanyTva] = useState('');
-    const [rayonAction, setRayonAction] = useState('');
     const [pricePresentielDaily, setPricePresentielDaily] = useState('');
     const [pricePresentielHalfDay, setPricePresentielHalfDay] = useState('');
     const [pricePresentielRayonAction, setPricePresentielRayonAction] = useState('');
     const [priceDistancielDaily, setPriceDistancielDaily] = useState('');
     const [priceDistancielHalfDay, setPriceDistancielHalfDay] = useState('');
     const [priceTransport, setPriceTransport] = useState('');
-    const [comment, setComment] = useState('');
-    const [docData, setDocData] = useState('');
-    //const { id } = useParams();    
+    const [userComment, setUserComment] = useState('');
 
-    const countriesDataList = useMemo( () => countryList().getData(userCountry), [])
-    const dataUserType =  [ 
-        { value: "auto", label: "Auto-Entrepreneur" }, 
-        { value: "portage", label: "Portage" },
-        { value: "ei", label: "Entreprise individuelle" },
-        { value: "sarl", label: "SARL" },
-        { value: "eurl", label: "EURL" },
-        { value: "sas", label: "SAS" },
-        { value: "sasu", label: "SASU" }
-    ]
-    const userSkillsList = [ 
-        { value: "adobe", label: "Adobe" },
-        { value: "canvas", label: "Canvas" },
-        { value: "cloud", label: "Cloud" },
-        { value: "compta", label: "Comptabilité" },
-        { value: "marches-privés", label: "Marchés privés" },
-        { value: "marches-publics", label: "Marchés publics" },        
-        { value: "ms-project", label: "Microsoft Project" },         
-        { value: "ms-office", label: "Microsoft Office" },
-        { value: "sketch", label: "Sketch" },
-        { value: "zoho", label: "Zoho" },
-    ]
-    //todo
-    const getUserTypeDefaultValue = () => {
-    
+   
 
-    }
+    const handleCreateUserData = async (e) => {
 
-    const getUserData = userId => {
-        
-        UserService.get(userId)
-        .then(  response => {
-            setUserData(response.data);       
-            setCurrentUser(response.data);
-            setUserName(response.data.userName)
-            setUserFirstName(response.data.userFirstName)
-            setUserPhone(response.data.userPhone)
-            setUserMobile(response.data.userMobile)
-            setUserEmail(response.data.userEmail)
-            setUserAddress(response.data.userAddress)
-            setUserPostalCode(response.data.userPostalCode)
-            setUserDepartment(response.data.userDepartment)
-            setUserSkills(response.data.userSkills)
-            setCompanyName(response.data.companyName)
-            setUserCountry(response.data.userCountry)
-            setCompanyType(response.data.companyType)
-            setCompanyTva(response.data.companyTva)
-            setRayonAction(response.data.rayonAction)
-            setPricePresentielDaily(response.data.pricePresentielDaily)
-            setPricePresentielHalfDay(response.data.pricePresentielHalfDay)
-            setPriceDistancielDaily(response.data.priceDistancielDaily)
-            setPriceDistancielHalfDay(response.data.priceDistancielHalfDay)
-            setPricePresentielRayonAction(response.data.pricePresentielRayonAction)            
-            setPriceTransport(response.data.priceTransport)
-            setComment(response.data.comment)
-            
-        })
-
-        
-
-    }
-    
-    useEffect(() => {
-
-        if (userId) {
-            getUserData(userId);
-        }        
-        
-      }, [userId]);
-
-
-
-    const handleEditUserData = (e) => {
-
-        e.preventDefault();
+        e.preventDefault(); 
 
         try {
 
             const userData = JSON.stringify({
-                userName,
-                userFirstName,
-                userPhone,
-                userMobile,
-                userEmail,
-                userAddress,
-                userPostalCode,
-                userDepartment,
-                userCountry,
-                userSkills,
-                companyName,
-                companyType,
-                companyTva,                
-                rayonAction,
-                pricePresentielDaily,
-                pricePresentielHalfDay,
-                pricePresentielRayonAction,
-                priceDistancielDaily,
-                priceDistancielHalfDay,
-                priceTransport,
-                comment
-            });
+                            userName,
+                            userFirstName,
+                            userPhone,
+                            userMobile,
+                            userEmail,
+                            userAddress,
+                            userPostalCode,                            
+                            userDepartment,
+                            userCountry,
+                            userSkills,
+                            companyName,
+                            companyType,
+                            companyTva,
+                            pricePresentielDaily,
+                            pricePresentielHalfDay,
+                            pricePresentielRayonAction,
+                            priceDistancielDaily,
+                            priceDistancielHalfDay,
+                            priceTransport,
+                            userComment
+                        })
 
-            UserService.update(userId, userData)
-            .then( response => {
-                if(response.status == 200) {
-                    // toast.success("Mise à jour bien effectué");
-                    toast.error("Problème lors de la mise à jour. Contactez l'administrateur.");
-                    navigate('/users');
-                }
-            });
+            
 
-            // const response = axios.put(
-            //     USER_GET_URL + userId,
-            //     userData),
+            // const response = await axios.post(
+            //     REGISTER_URL,
+            //     JSON.stringify({
+            //             userName,
+            //             userFirstName,
+            //             userPhone,
+            //             userMobile,
+            //             userEmail,
+            //             userAddress,
+            //             userDepartment,
+            //             userSkills,
+            //             companyType,
+            //             companyTva,
+            //             pricePresentielDaily,
+            //             pricePresentielHalfDay,
+            //             pricePresentielRayonAction,
+            //             priceDistancielDaily,
+            //             priceDistancielHalfDay,
+            //             priceTransport,
+            //             comment
+            //         }),
             //         {
             //             headers: { 'Content-Type': 'application/json' },
             //             withCredentials: false
             //         }
-            //     ).then( res => {
-            //         toast.success('Enregistrement bien effectué')
-            //     });            
-               
+            //     );
+
+            UserService.create(userData)
+                .then(response => {
+                    toast.error("Problème lors de la création. Contactez l'administrateur.");
+                    if (response.status) {
+                        // toast.success('Utilisateur bien créé');                        
+                        navigate('/users');
+                    }
+                })
+                .then(error => {
+                   console.log(error);
+                })
+            
+            
+            //toast.success('Utilisateur bien créé');
+            //navigate('/users');
         }
-        catch(error){      
-            console.log(error);
+        catch(err){ 
+
+            console.error(err);     // NOTE - use "error.response.data` (not "error")
+
+
         }
 
         
 
     }
 
+    const countriesDataList = useMemo( () => countryList().getData(), [])
+
     const handleChangeCompanyCountry = (e) => {        
-        setUserCountry( e.value )        
-    }
-
-    const handleCompanyType = (e) => {
-        setCompanyType( e.value )
-    }
-
-    const handleUserSkills = (e) => {    
-        let values = []
-        e.forEach( (option)=>{
-            //console.log(option.value)
-            values.push(option.value)
-        }) 
-        let data = values.join(',')
-        setUserSkills(data)
+        setUserCountry( e.value )
     }
 
     return (
 
         <>
-        <form action="#" onSubmit={handleEditUserData}>
+        <form action="#" onSubmit={handleCreateUserData}>
             <div className="flex justify-between">
                 <div className="flex"></div>
                 <div className="flex">
@@ -220,7 +140,6 @@ const DataEditUser = () => {
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
-
 
                 <div className="flex flex-col gap-9">
 
@@ -239,8 +158,8 @@ const DataEditUser = () => {
                                     </label>
                                     <input
                                     type="text"
-                                    id="userFirstName"
-                                    onChange={ (e) => setUserFirstName(e.target.value)}
+                                    id="user-firstname"
+                                    onChange={(e) => setUserFirstName(e.target.value)}
                                     value={userFirstName}
                                     placeholder="Entrez le prénom"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -253,13 +172,13 @@ const DataEditUser = () => {
                                     Nom <span className="text-meta-1">*</span>
                                     </label>
                                     <input
-                                        type="text"
-                                        id="userName"  
-                                        onChange={(e) => setUserName(e.target.value)}
-                                        value={userName}
-                                        placeholder="Entrer le nom"
-                                        className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                        required
+                                    type="text"
+                                    id="user-name"
+                                    onChange={(e) => setUserName(e.target.value)}
+                                    value={userName}
+                                    placeholder="Entrer le nom"
+                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    required
                                     />
                                 </div>
                             </div>
@@ -269,7 +188,7 @@ const DataEditUser = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    id="userPhone"
+                                    id="user-phone"
                                     onChange={(e) => setUserPhone(e.target.value)}
                                     value={userPhone}
                                     placeholder="Téléphone"
@@ -283,7 +202,7 @@ const DataEditUser = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    id="userMobile"
+                                    id="user-mobile"
                                     onChange={(e) => setUserMobile(e.target.value)}
                                     value={userMobile}
                                     placeholder="Téléphone"
@@ -296,7 +215,7 @@ const DataEditUser = () => {
                                 </label>
                                 <input
                                     type="email"
-                                    id="userEmail"
+                                    id="user-email"
                                     onChange={(e) => setUserEmail(e.target.value)}
                                     value={userEmail}
                                     placeholder="Enter your email address"
@@ -310,7 +229,7 @@ const DataEditUser = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    id="userAddress"
+                                    id="user-address"
                                     onChange={(e) => setUserAddress(e.target.value)}
                                     value={userAddress}
                                     placeholder="Adresse / CP / Ville"
@@ -324,13 +243,13 @@ const DataEditUser = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    id="userAddress"
+                                    id="user-postal-code"
                                     onChange={(e) => setUserPostalCode(e.target.value)}
                                     value={userPostalCode}
-                                    placeholder="CP"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"                                    
+                                    placeholder="Code postal"
+                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
-                            </div>  
+                            </div>                               
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Département
@@ -343,20 +262,17 @@ const DataEditUser = () => {
                                     placeholder="Département"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
-                            </div> 
+                            </div>   
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Pays
                                 </label>
                                 <Select 
-                                    options={countriesDataList}
-                                    value = {
-                                        countriesDataList.filter(option => 
-                                           option.value === userCountry )
-                                     }
+                                    options={countriesDataList} 
                                     onChange={handleChangeCompanyCountry}
-                                />
-                            </div>       
+                                 />
+                            </div>   
+
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Lien Google map
@@ -372,18 +288,82 @@ const DataEditUser = () => {
                             </div>    
                             <div>
                                 <label className="mb-3 block text-black dark:text-white">
-                                Compétences {userSkills}
+                                Compétences
                                 </label>
-                                
-                                <Select 
-                                    options={userSkillsList}                                     
-                                    onChange={handleUserSkills}
-                                    value={
-                                        userSkillsList.filter(option => 
-                                           option.value === userSkills )
-                                     }
-                                    isMulti={true}
-                                />                                
+                                <div className="relative z-20 w-full rounded border border-stroke p-1.5 pr-8 font-medium outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input">
+                                <div className="flex flex-wrap items-center">
+                                    <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
+                                    Autocad
+                                    <span className="cursor-pointer pl-2 hover:text-danger">
+                                        <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                        <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
+                                            fill="currentColor"
+                                        ></path>
+                                        </svg>
+                                    </span>
+                                    </span>
+                                    <span className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30">
+                                    Stetchup
+                                    <span className="cursor-pointer pl-2 hover:text-danger">
+                                        <svg
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 12 12"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                        <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
+                                            fill="currentColor"
+                                        ></path>
+                                        </svg>
+                                    </span>
+                                    </span>
+                                </div>
+                                <select
+                                    name=""
+                                    id="user-competences"
+                                    onChange={(e) => setUserSkills(e.target.value)}
+                                    value={userSkills}
+                                    className="absolute top-0 left-0 z-20 h-full w-full bg-transparent opacity-0"
+                                >
+                                    <option value="">Pack Office</option>
+                                    <option value="">MS project</option>
+                                    <option value="">Marches Publics</option>
+                                    <option value="">Marches Privés</option>
+                                    <option value="">Zoho</option>
+                                    <option value="">Google</option>
+                                </select>
+                                <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
+                                    <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                    <g opacity="0.8">
+                                        <path
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
+                                        d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                                        fill="#637381"
+                                        ></path>
+                                    </g>
+                                    </svg>
+                                </span>
+                                </div>
                             </div>
                             {/* <!-- Toggle switch input --> */}
                             <div>
@@ -416,14 +396,37 @@ const DataEditUser = () => {
                                     Type de structure <span className="text-meta-1">*</span>
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
-                                    <Select                                        
-                                        options={dataUserType}
-                                        value = {
-                                            dataUserType.filter(option => 
-                                               option.value === companyType )
-                                         }
-                                        onChange={handleCompanyType}
-                                    />                                   
+                                    <select 
+                                        id="user-company-type"
+                                        onChange={(e) => setCompanyType(e.target.value)}                                        
+                                        className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
+                                        <option value="">Auto-Entrepreneur</option>
+                                        <option value="">Portage</option>
+                                        <option value="">EI</option>
+                                        <option value="">SARL</option>
+                                        <option value="">EURL</option>
+                                        <option value="">SAS</option>
+                                        <option value="">SASU</option>
+                                    </select>
+                                    <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                                    <svg
+                                        className="fill-current"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <g opacity="0.8">
+                                        <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                                            fill=""
+                                        ></path>
+                                        </g>
+                                    </svg>
+                                    </span>
                                 </div>
                             </div>     
 
@@ -447,10 +450,11 @@ const DataEditUser = () => {
                                 </div>
                             </div>
 
-                            <DocumentManager />
+                            <div className="border border-stroke p-4">
+                                <h4>Gestion de documents</h4>
 
-                            <DocumentList />
-                                
+                            </div>
+
                         </div>
                         
                     </div>  
@@ -501,10 +505,7 @@ const DataEditUser = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">
-                                    <textarea 
-                                        name="rayon-action"
-                                        onChange={ (e) => setRayonAction( e.target.value) }
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500">
+                                    <textarea className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500">
                                     </textarea>
                                 </div>
                             </div>                                                                                   
@@ -553,13 +554,14 @@ const DataEditUser = () => {
                         </div>
                         <div className="flex flex-col gap-5.5 p-6.5">                                                
                             <textarea
-                            id="comment"
-                            onChange={(e) => setComment(e.target.value)}
-                            value={comment}
+                            onChange={(e) => setUserComment(e.target.value)}
+                            value={userComment}
                             rows={6}
                             placeholder="Default textarea"
                             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            >{comment}</textarea>
+                            ></textarea>
+
+
                         </div>
 
                         <div>
@@ -577,4 +579,4 @@ const DataEditUser = () => {
 
 }
 
-export default DataEditUser
+export default DataCreateUserSkills

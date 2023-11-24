@@ -13,7 +13,7 @@ const SignIn = () => {
 
   const testAuthData = {
     userEmail: 'capnumerique@formationbtp.fr',
-    userPasswd: 'Capnum123',
+    userPasswd: 'Capnum123.',
   }; 
 
   const authenticateUser = (username, password) => {
