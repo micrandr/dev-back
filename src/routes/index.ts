@@ -23,6 +23,9 @@ const CreateUserAccess = lazy(() => import('../pages/Users/CreateUserAccess'));
 const EditUserAccess = lazy(() => import('../pages/Users/EditUserAccess'));
 const FicheUserAccess = lazy(() => import('../pages/Users/FicheUserAccess'));
 const ListUserAccess = lazy(() => import('../pages/Users/ListUserAccess'));
+const ListLearners = lazy(() => import('../pages/Users/ListLearners'));
+const CreateLearner = lazy(() => import('../pages/Users/CreateLearner'));
+const ListCustomers = lazy(() => import('../pages/Users/ListCustomers'));
 const ListCompagnies = lazy(() => import('../pages/Users/ListCompagnies'));
 const CreateCompany = lazy(() => import('../pages/Users/CreateCompany'));
 const EditCompany = lazy(() => import('../pages/Users/EditCompany'));
@@ -124,7 +127,7 @@ const coreRoutes = [
   {
     path: '/rooms/fiche/:id',
     title: 'Fiche salle de formation',
-    component: EditRoom,
+    component: FicheRoom,
   },     
   {
     path: '/calendar',
@@ -176,6 +179,26 @@ const coreRoutes = [
     title: 'Fiche compétences',
     component: CreateUserSkills,
   },  
+  {
+    path: '/learners',
+    title: 'Inscrits',
+    component: ListLearners,
+  },
+  {
+    path: '/learners/create',
+    title: 'Création nouveau participant',
+    component: CreateLearner,
+  },   
+  {
+    path: '/customers',
+    title: 'Clients/Prospects',
+    component: ListCustomers,
+  },
+  {
+    path: '/customers/create',
+    title: 'Création nouveau client',
+    component: CreateLearner,
+  }, 
   {
     path: '/useraccess',
     title: 'UsersAccess',

@@ -6,6 +6,7 @@ import TableDataList from './Lists/TableDataList';
 import LinkAction from './Buttons/LinkActions'
 import Swal from 'sweetalert2';
 import UserService from '../services/UserServices';
+import LearnerDataService from '../services/LearnerServices';
 import DocumentStatus from './Documents/DocumentStatus'
 
 type Users = {
@@ -16,7 +17,7 @@ type Users = {
 }
 
 
-const DataListUsers = () => {
+const DataListLearners = () => {
   const navigate = useNavigate()
   const [users, setUsers] = useState<any[]>([]);
 
@@ -25,7 +26,7 @@ const DataListUsers = () => {
   }, []);
 
   const retrieveUsers = () => {
-    UserDataService.getAll()
+    LearnerDataService.getAll()
       .then(response => {
         setUsers(response.data['hydra:member']);
       })
@@ -60,46 +61,46 @@ const DataListUsers = () => {
     
   }
 
-  const roomCreateUrl = "/users/create/"
-  const roomCreateText = 'Nouveau formateur'
+  const roomCreateUrl = "/learners/create/"
+  const roomCreateText = 'Nouveau participant'
 
   const columns = useMemo<MRT_ColumnDef<Users>[]>(
     () => [
       {
-        accessorKey: 'userName',
+        accessorKey: 'subscriberName',
         header: 'Nom',
       },
       {
-        accessorKey: 'userFirstName',
+        accessorKey: 'subscriberFirstName',
         header: 'Prénom'
       },
       {
-        accessorKey: 'userAddress',
+        accessorKey: 'subscriberAddress',
         header: 'Adresse',
         size: 2
       },
       {
-        accessorKey: 'userPhone',
+        accessorKey: 'subscriberPhone',
         header: 'Téléphone',
         size: 2
       },
       {
-        accessorKey: 'userMobile',
+        accessorKey: 'subscriberMobile',
         header: 'Mobile',
         size: 2
       },
       {
-        accessorKey: 'userDepartment',
-        header: 'Département',
+        accessorKey: 'subscriberAddress',
+        header: 'Adresse',
         size: 2
       },                
       {
-        accessorKey: 'companyType',
+        accessorKey: 'subscriberType',
         header: 'Type',
         size: 2
       }, 
       {
-        accessorKey: 'userSkills',
+        accessorKey: 'subscriberSkills',
         header: 'Compétences',
         size: 2
       },
@@ -147,4 +148,4 @@ const DataListUsers = () => {
   );
 };
 
-export default DataListUsers;
+export default DataListLearners;

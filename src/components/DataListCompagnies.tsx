@@ -81,10 +81,31 @@ const DataListCompagnies = () => {
         header: 'Type'
       },
       {
+        accessorKey: 'companyAddress',
+        header: 'Adresse'
+      },
+      {
         accessorKey: 'companyDepartment',
         header: 'Département',
         size: 2
       },
+      {
+        accessorKey: 'companyCountry',
+        header: 'Pays',
+        size: 2
+      },
+      {
+        accessorKey: 'companyRcs',
+        header: 'RCS'
+      },
+      {
+        accessorKey: 'companySiret',
+        header: 'Siret'
+      },
+      {
+        accessorKey: 'companySiren',
+        header: 'Siren'
+      },     
       {
         id: "actionColumnRoom",
         header: "Actions",

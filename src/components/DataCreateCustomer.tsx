@@ -43,7 +43,7 @@ const dataUserType =  [
 
 const initialUserSkills = [{label:'',value:''}]
 
-const DataCreateUser = () => {
+const DataCreateCustomer = () => {
 
     const navigate = useNavigate();
 
@@ -540,4 +540,4 @@ const DataCreateUser = () => {
 
 }
 
-export default DataCreateUser
+export default DataCreateCustomer

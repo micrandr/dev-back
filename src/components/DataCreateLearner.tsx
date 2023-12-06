@@ -31,19 +31,16 @@ const userSkillsList = [
 ]
 
 const dataUserType =  [ 
-    { value: "auto", label: "Auto-Entrepreneur" }, 
-    { value: "portage", label: "Portage" },
-    { value: "ei", label: "Entreprise individuelle" },
-    { value: "sarl", label: "SARL" },
-    { value: "eurl", label: "EURL" },
-    { value: "sas", label: "SAS" },
-    { value: "sasu", label: "SASU" }
+    { value: "employee", label: "Employée" }, 
+    { value: "manager", label: "Manager" },
+    { value: "technicien", label: "Technicien" },
+    { value: "autre", label: "Autre" }
 ]
 
 
 const initialUserSkills = [{label:'',value:''}]
 
-const DataCreateUser = () => {
+const DataCreateLearner = () => {
 
     const navigate = useNavigate();
 
@@ -211,8 +208,7 @@ const DataCreateUser = () => {
                             </h3>
                         </div>
                         
-                        <div className="p-6.5">
-                            <FileUpload />
+                        <div className="p-6.5">                           
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className="w-full xl:w-1/2">
                                     <label className="mb-2.5 block text-black dark:text-white">
@@ -350,40 +346,10 @@ const DataCreateUser = () => {
                                     className="hidden w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
                             </div>    
-                            <div>
-                                <label className="mb-3 block text-black dark:text-white">
-                                Compétences
-                                </label>
-                                
-                                <Select 
-                                    options={userSkillsList}   
-                                    placeholder="Selectionner"                                  
-                                    onChange={handleUserSkills}
-                                    value={userSkillsList.filter(obj=>selectedSkillsValues.includes(obj.value))}
-                                    isSearchable={true}
-                                    isMulti
-                                />                                
-                            </div>
-                            {/* <!-- Toggle switch input --> */}
-                            <div>
-                                <div className="flex flex-col mt-5">                                    
-                                    <FormGroup>
-                                        <FormControlLabel control={<Checkbox defaultChecked onChange={handleCertifiedQualiopi} />} label="Certifié Quailopi" />
-                                    </FormGroup> 
-                                </div>
-                            </div> 
+                          
+                            {/* <!-- Toggle switch input --> */}                          
 
-                            <div>
-                                <div className="border-b mt-5 py-5 border-stroke dark:border-strokedark">
-                                    <h3 className="font-medium text-black dark:text-white">
-                                        Commentaire
-                                    </h3>
-                                </div>
-                                <div className="flex flex-col">
-                                    <ReactQuill theme="snow" value={comment} onChange={setComment} />
-                                </div>
-                            </div>
-
+                            
                         </div>                        
                     </div>
                 </div>
@@ -401,7 +367,7 @@ const DataCreateUser = () => {
 
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Type de structure <span className="text-meta-1">*</span>
+                                    Type de participant <span className="text-meta-1">*</span>
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
                                     <Select                                        
@@ -430,105 +396,34 @@ const DataCreateUser = () => {
                             </div>
 
                             <div>
-                                <div className="flex flex-col mt-5">                                    
-                                    <FormGroup>
-                                        <FormControlLabel control={<Checkbox defaultChecked />} label="Soumis à la TVA" />
-                                    </FormGroup> 
+                                <label className="mb-3 block text-black dark:text-white">
+                                Compétences
+                                </label>
+                                
+                                <Select 
+                                    options={userSkillsList}   
+                                    placeholder="Selectionner"                                  
+                                    onChange={handleUserSkills}
+                                    value={userSkillsList.filter(obj=>selectedSkillsValues.includes(obj.value))}
+                                    isSearchable={true}
+                                    isMulti
+                                />                                
+                            </div>
+
+                            <div>
+                                <div className="border-b mt-5 py-5 border-stroke dark:border-strokedark">
+                                    <h3 className="font-medium text-black dark:text-white">
+                                        Commentaire
+                                    </h3>
                                 </div>
-                            </div> 
-
-                            <DocumentManager />
-
-                            <DocumentList />
+                                <div className="flex flex-col">
+                                    <ReactQuill theme="snow" value={comment} onChange={setComment} />
+                                </div>
+                            </div>
 
                         </div>
                         
                     </div>  
-
-                    {/* <!-- Textarea Fields --> */}
-                    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                        <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-                            <h3 className="font-medium text-black dark:text-white">
-                                Tarification d'animation
-                            </h3>
-                        </div>
-                        
-                        <div className="flex flex-col gap-5.5 p-6.5 border border-stroke rounded mt-5 mx-5">
-
-                            <h4 className="font-semibold">En présentiel</h4>
-                            <div className="md:flex md:items-center mb-6">
-                                <div className="md:w-1/3">
-                                <label className="block  mb-1 md:mb-0 pr-4">
-                                    Journalier 
-                                </label>
-                                </div>
-                                <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setPricePresentielDaily(e.target.value)}
-                                        value={pricePresentielDaily}
-                                        placeholder="Tarif journalier" className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
-                                </div>
-                            </div>
-                            <div className="md:flex md:items-center mb-6">
-                                <div className="md:w-1/3">
-                                <label className="block mb-1 md:mb-0 pr-4">
-                                    Demi-journalier
-                                </label>
-                                </div>
-                                <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setPricePresentielHalfDay(e.target.value)}
-                                        value={pricePresentielHalfDay}
-                                        placeholder="Tarif demi-journée" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
-                                    />
-                                </div>
-                            </div> 
-                            <div className="md:flex md:items-center mb-6">
-                                <div className="md:w-1/3">
-                                <label className="block mb-1 md:mb-0 pr-4">
-                                    Rayon d'action
-                                </label>
-                                </div>
-                                <div className="md:w-2/3">                                    
-                                    <ReactQuill theme="snow" value={rayonAction} onChange={handleRayonAction} />
-                                </div>
-                            </div>                                                                                   
-                        </div>
-                        <div className="flex flex-col  gap-5.5 p-6.5 border border-stroke rounded  mt-5 mb-5 mx-5">
-
-                            <h4 className="font-semibold">En distantiel</h4>
-                            <div className="md:flex md:items-center mb-6">
-                                <div className="md:w-1/3">
-                                <label className="block  mb-1 md:mb-0 pr-4">
-                                    Journalier
-                                </label>
-                                </div>
-                                <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setPriceDistancielDaily(e.target.value)}
-                                        value={priceDistancielDaily}
-                                        placeholder="Tarif journalier" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
-                                    />
-                                </div>
-                            </div>
-                            <div className="md:flex md:items-center mb-6">
-                                <div className="md:w-1/3">
-                                <label className="block mb-1 md:mb-0 pr-4">
-                                    Demi-journalier
-                                </label>
-                                </div>
-                                <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setPriceDistancielHalfDay(e.target.value)}
-                                        value={priceDistancielHalfDay}
-                                        placeholder="Tarif demi-journée" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
-                                </div>
-                            </div>                                                                                                             
-                        </div>                   
-                    </div>               
 
                 </div>
 
@@ -540,4 +435,4 @@ const DataCreateUser = () => {
 
 }
 
-export default DataCreateUser
+export default DataCreateLearner

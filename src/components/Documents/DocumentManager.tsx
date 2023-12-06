@@ -16,12 +16,12 @@ export interface SimpleDialogProps {
   }
 
   const docTypeOptions = [
-    { value: 'kbis', label: 'KBis' },
-    { value: 'ursaf', label: 'URSSAF' },
-    { value: 'assurance', label: 'Assurance' },
-    { value: 'fiscale', label: 'Attestation fiscale' },
-    { value: 'tva-related', label: 'Lié à la TVA' },
-    { value: 'certification', label: 'Certification' },
+    { value: 'kbis', label: 'KBis' },    
+    { value: 'ursssaf', label: 'URSSSAF' },    
+    { value: 'cv', label: 'CV' },
+    { value: 'assurance-decennale', label: 'Assurance Décennale' },
+    { value: 'attestation-fiscale-tva', label: 'Attestation fiscale TVA' },
+    { value: 'attestation-honneur', label: 'Attestation sur l\'honneur' },    
     { value: 'autre', label: 'Autres' }
   ]
 

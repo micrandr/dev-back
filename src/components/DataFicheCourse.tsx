@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast';
 import CourseService from '../services/CourseServices';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 import Select from "react-select";
 import slugify from "slugify";
 
@@ -151,14 +153,32 @@ const DataEditCourse = () => {
 
     }
 
+    const handleLinkEdit = () => {
+        const linkPreview = '/courses/edit/' + courseId
+        navigate(linkPreview)
+    }
+
+    const handleLinkNew = () => {
+        const linkPreview = '/courses/create/'
+        navigate(linkPreview)
+    }
+
     return (
 
         <>
         <form action="#" onSubmit={handleCreateCourseData}>
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-3">
                 <div className="flex"></div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Editer</button>
+                    {/* <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Editer</button> */}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkEdit}>Editer</Button>
+                        <Button onClick={handleLinkNew}>Nouveau</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             {/* <div className="flex grid-cols-1 gap-9 sm:grid-cols-2">*/}
@@ -169,7 +189,7 @@ const DataEditCourse = () => {
                     <div className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Informations générales 78789                                
+                                Informations générales                                
                             </h3>
                         </div>
                         

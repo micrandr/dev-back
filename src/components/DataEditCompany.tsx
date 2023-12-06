@@ -9,6 +9,11 @@ import SwitcherTVA from './SwitcherTVA';
 import CompanyDataService from "../services/CompanyServices";
 import DocumentManager from "./Documents/DocumentManager";
 import DocumentList from "./Documents/DocumentList";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
+// import ButtonActions from "./Buttons/ButtonActions";
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 
 
 const REGISTER_URL = '/compagnies';
@@ -146,9 +151,9 @@ const DataEditCompany = () => {
 
             CompanyDataService.update(companyId, companyDataEdited)
             .then( response => {
-                toast.error("Problème lors de la mise à jour. Contactez l'administrateur.");
+                //toast.error("Problème lors de la mise à jour. Contactez l'administrateur.");
                 if(response.status == 200) {
-                    // toast.success("Mise à jour bien effectué");
+                    toast.success("Mise à jour bien effectué");
                     navigate('/compagnies');
                 }
             });
@@ -169,6 +174,11 @@ const DataEditCompany = () => {
 
     }
 
+    const handleLinkPreview = (e) => {
+        const urlFiche = '/compagnies/fiche/' + companyId
+        navigate(urlFiche)
+    }
+
     return (
 
         <>
@@ -176,7 +186,15 @@ const DataEditCompany = () => {
             <div className="flex justify-between">
                 <div className="flex"></div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    {/**<button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>*/}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkPreview}>Previsualiser</Button>
+                        <Button type="submit">Enregistrer</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
@@ -386,11 +404,6 @@ const DataEditCompany = () => {
                                         <SwitcherTVA />                                                                            
                                     </div>
                                 </div>
-
-                                <DocumentManager />
-
-                                <DocumentList />
-
                             </div>
 
                         </div>
@@ -405,22 +418,24 @@ const DataEditCompany = () => {
                                 Commentaire
                             </h3>
                         </div>
-                        <div className="flex flex-col gap-5.5 p-6.5">                                                
-                            <textarea
-                            onChange={(e) => setCompanyComment(e.target.value)}
-                            value={companyComment}
-                            rows={6}
-                            placeholder="Default textarea"
-                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            ></textarea>
+                        <div className="flex flex-col gap-5.5 p-6.5">      
+                            <ReactQuill theme="snow" value={companyComment} onChange={setCompanyComment} />
+                        </div>
+                    </div>    
 
-
+                    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                        <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+                            <h3 className="font-medium text-black dark:text-white">
+                                Gestion de documents
+                            </h3>
                         </div>
 
-                        <div>
-                            
+                        <div className="flex flex-col gap-5.5 p-6.5">
+                            <DocumentManager />
+                            <DocumentList />
                         </div>
-                    </div>              
+                       
+                    </div>             
 
                 </div>
 

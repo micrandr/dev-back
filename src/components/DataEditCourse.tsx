@@ -5,6 +5,10 @@ import CourseService from '../services/CourseServices';
 import Select from "react-select";
 import slugify from "slugify";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const levelCourseList =  [ 
     { value: "none", label: "Selectionner" }, 
@@ -168,7 +172,7 @@ const DataEditCourse = () => {
                 .then( (response) => {
                     if(response.status == 200 || response.status==201){
                         toast.success("Enregistrement bien appliqué")
-                        // navigate('/courses')
+                        navigate('/courses')
                     }
                     
                 })
@@ -186,14 +190,31 @@ const DataEditCourse = () => {
 
     }
 
+    // const setHandleCourseRequirement = (e, value) => {
+    //     setCourseRequirement(e)
+    // }
+
+    const handleLinkPreview = (e) => {
+        const urlFiche = '/courses/fiche/' + courseId
+        navigate(urlFiche)
+    }
+
     return (
 
         <>
         <form action="#" onSubmit={handleCreateCourseData}>
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-3">
                 <div className="flex"></div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    {/* <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button> */}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button type="submit">Enregistrer</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             {/* <div className="flex grid-cols-1 gap-9 sm:grid-cols-2">*/}
@@ -223,7 +244,7 @@ const DataEditCourse = () => {
                                 />
                             </div>
 
-                            <div className="mb-4.5">
+                            <div className="mb-4.5 hidden">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Slug
                                 </label>
@@ -299,13 +320,8 @@ const DataEditCourse = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Prérequis
                                 </label>
-                                <textarea                                    
-                                    id="course-prerequis"
-                                    onChange={(e) => setCourseRequirement(e.target.value)}
-                                    value={currentCourse?.courseRequirement}
-                                    placeholder="Prérequis"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                ></textarea>
+                                
+                                <ReactQuill theme="snow" value={courseRequirement} onChange={setCourseRequirement} />
                             </div>
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">

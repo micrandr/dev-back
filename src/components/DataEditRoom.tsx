@@ -1,18 +1,29 @@
 import { useRef, useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import SwitcherHandicap from './SwitcherHandicap';
 import SwitcherAccessCar from './SwitcherAccessCar';
-import SwitcherEquipments from './SwitcherEquipments';
-import axios from '../api/axios';
+// import axios from '../api/axios';
 import { toast } from "react-hot-toast";
+import RoomDataService from "../services/RoomServices";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-const REGISTER_URL = '/rooms';
+// const REGISTER_URL = '/rooms';
 
 const DataEditRoom = () => {
 
+    const navigate = useNavigate();
+    const params = useParams();
+    const roomId = params.id;
+
     const [roomLabel, setRoomLabel] = useState('');
+    const [roomMinPlace, setRoomMinPlace] = useState('');
     const [roomMaxPlace, setRoomMaxPlace] = useState('');
     const [roomAddress, setRoomAddress] = useState('');
     const [roomDepartment, setRoomDepartment] = useState('');
@@ -20,10 +31,15 @@ const DataEditRoom = () => {
     const [roomCoordinateLattitude, setRoomCoordinateLattitude] = useState('');
     const [roomGmapLink, setRoomGmapLink] = useState('');    
     const [roomEquipments, setRoomEquipments] = useState('');
+    const [roomEquipmentInternetAccess, setRoomEquipmentInternetAccess] = useState('');
+    const [roomEquipmentVideoProjector, setRoomEquipmentVideoProjector] = useState('');
+    const [roomEquipmentTouchScreen, setRoomEquipmentTouchScreen] = useState('');
+    const [roomEquipmentPaperboard, setRoomEquipmentPaperboard] = useState('');
     const [roomPriceHT, setRoomPriceHT] = useState('');
     const [roomTvaRate, setRoomTvaRate] = useState('');
+    const [roomHourPrice, setRoomHourPrice] = useState('');
     const [roomDailyPrice, setRoomDailyPrice] = useState('');
-    const [roomHalfDailyPrice, setRoomHalfDailyPrice] = useState('');
+    const [roomHalfDayPrice, setRoomHalfDayPrice] = useState('');
     const [roomHours, setRoomHours] = useState('');
     const [roomHourlyPrice, setRoomHourlyPrice] = useState('');
     const [roomComment, setRoomComment] = useState('');
@@ -45,9 +61,50 @@ const DataEditRoom = () => {
     const [roomDrinkDistributorComment, setRoomDrinkDistributorComment] = useState('');
     const [roomRestoDistributor, setRoomRestoDistributor] = useState('');
     const [roomRestoDistributorComment, setRoomRestoDistributorComment] = useState('');
-    
 
-   
+    const getRoomData = (id:string) => {
+        
+        RoomDataService.get(id)
+            .then(  response => {
+                setRoomLabel(response.data.roomLabel)  
+                setRoomMinPlace(response.data.roomMinPlace)
+                setRoomMaxPlace(response.data.roomMaxPlace)
+                setRoomAddress(response.data.roomAddress)
+                setRoomCoordinateLongitude(response.data.roomCoordinateLongitude)
+                setRoomCoordinateLattitude(response.data.roomCoordinateLattitude)
+                setRoomDepartment(response.data.roomDepartment)
+                setRoomGmapLink(response.data.roomGmapLink)
+                setRoomPriceHT(response.data.roomPriceHT)
+                setRoomHourPrice(response.data.roomHourPrice)
+                setRoomDailyPrice(response.data.roomDailyPrice)
+                setRoomHalfDayPrice(response.data.roomHalfDayPrice)
+                setRoomHourlyPrice(response.data.roomHourlyPrice)
+                setRoomHandicap(response.data.roomHandicap)
+                setRoomComment(response.data.roomComment)
+                setRoomAddress(response.data.roomAddress)
+                setRoomAddress(response.data.roomAddress)
+                setRoomContactFullname(response.data.roomContactFullname)
+                setRoomContactOccupation(response.data.roomContactOccupation)
+                setRoomContactPhone(response.data.roomContactPhone)
+                setRoomContactDirectLine(response.data.roomContactDirectLine)
+                setRoomContactComment(response.data.roomContactComment)
+                setRoomEquipmentInternetAccess(response.data.roomEquipmentInternetAccess)
+                setRoomEquipmentVideoProjector(response.data.roomEquipmentVideoProjector)
+                setRoomEquipmentTouchScreen(response.data.roomEquipmentTouchScreen)
+                setRoomEquipmentPaperboard(response.data.roomEquipmentPaperboard)          
+                
+            })
+
+        
+
+    }
+    
+    useEffect(() => {
+        if (roomId) {
+            getRoomData(roomId);
+        }
+        
+      }, [roomId]);      
 
     const handleCreateRoomData = async (e) => {
 
@@ -55,10 +112,10 @@ const DataEditRoom = () => {
 
         try {
 
-            const response = await axios.post(
-                REGISTER_URL,
-                JSON.stringify({
+
+            const roomDataEdited = JSON.stringify({
                         roomLabel,
+                        roomMinPlace,
                         roomMaxPlace,
                         roomAddress,
                         roomDepartment,
@@ -68,8 +125,9 @@ const DataEditRoom = () => {
                         roomEquipments,
                         roomPriceHT,
                         roomTvaRate,
+                        roomHourPrice,
                         roomDailyPrice,
-                        roomHalfDailyPrice,
+                        roomHalfDayPrice,
                         roomHours,
                         roomComment,
                         roomHandicap,
@@ -78,6 +136,7 @@ const DataEditRoom = () => {
                         roomContactPhone,
                         roomContactDirectLine,
                         roomContactEmail,
+                        roomContactComment,
                         roomCommentAccess,
                         roomCarAccess,
                         roomCommonTransport,
@@ -87,16 +146,65 @@ const DataEditRoom = () => {
                         roomDrinkDistributor,
                         roomDrinkDistributorComment,
                         roomRestoDistributor,
-                        roomRestoDistributorComment
-                    }),
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        withCredentials: false
-                    }
-                );
+                        roomRestoDistributorComment,
+                        roomEquipmentInternetAccess,
+                        roomEquipmentVideoProjector,
+                        roomEquipmentTouchScreen,
+                        roomEquipmentPaperboard
+                    })
+            RoomDataService.update(roomId, roomDataEdited)
+                .then( (response)=>{
+
+                    toast.success("Mise à jour bien effectuée")
+                    navigate('/rooms')
+                    
+                    
+                })
+                .then((error)=>{
+                    console.log("Erreur lors de la maj " + error)
+                })
+            // const response = await axios.post(
+            //     REGISTER_URL,
+            //     JSON.stringify({
+            //             roomLabel,
+            //             roomMaxPlace,
+            //             roomAddress,
+            //             roomDepartment,
+            //             roomCoordinateLongitude,
+            //             roomCoordinateLattitude,
+            //             roomGmapLink,
+            //             roomEquipments,
+            //             roomPriceHT,
+            //             roomTvaRate,
+            //             roomDailyPrice,
+            //             roomHalfDayPrice,
+            //             roomHours,
+            //             roomComment,
+            //             roomHandicap,
+            //             roomContactFullname,
+            //             roomContactOccupation,
+            //             roomContactPhone,
+            //             roomContactDirectLine,
+            //             roomContactEmail,
+            //             roomCommentAccess,
+            //             roomCarAccess,
+            //             roomCommonTransport,
+            //             roomCommonTransportComment,
+            //             roomTrainAccess,
+            //             roomTrainAccessComment,
+            //             roomDrinkDistributor,
+            //             roomDrinkDistributorComment,
+            //             roomRestoDistributor,
+            //             roomRestoDistributorComment
+            //         }),
+            //         {
+            //             headers: { 'Content-Type': 'application/json' },
+            //             withCredentials: false
+            //         }
+            //     );
 
             // console.log(response?.data);
-            toast.error("Problème lors de la création. Contactez l'administrateur.");
+            // toast.error("Problème lors de la création. Contactez l'administrateur.");
         }
         catch(err){ 
 
@@ -109,21 +217,49 @@ const DataEditRoom = () => {
 
     }
 
+    const handleGoogleMapLink = (e) => {
+
+        const gLinkFirst = 'https://www.google.com/maps/place/'
+        setRoomAddress(e.target.value);
+        const addressValue  = e.target.value;
+        const gLink = gLinkFirst+encodeURIComponent(addressValue);        
+
+        console.log(gLink)
+        
+        //setUserGMapLink(gLink)
+        setRoomGmapLink(gLink)
+
+    }
+
+    const handleLinkPreview = () => {
+        const linkPreview = '/rooms/fiche/' + roomId
+        navigate(linkPreview)
+    }
+
+    
     return (
 
         <>
         <form action="#" onSubmit={handleCreateRoomData}>
-        <div className="flex justify-between">
+        <div className="flex justify-between mb-3">
                 <div className="flex p-2">
                    
                 </div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    {/**<button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>*/}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button type="submit">Enregistrer</Button>
+                    </ButtonGroup>
                 </div>
             </div>
-            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
 
-                <div className="flex flex-col gap-9">
+                <div className="flex flex-col gap-9 ">
 
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -147,19 +283,35 @@ const DataEditRoom = () => {
                                     required
                                 />
                             </div>
-                            <div className="mb-4.5">
-                                <label className="mb-2.5 block text-black dark:text-white">
-                                    Capacité maxi (nb places)
-                                </label>
-                                <input
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">                                
+                                <div className="w-full xl:w-1/2">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                    Place Mini
+                                    </label>
+                                    <input
+                                    type="text"                                    
+                                    onChange={(e) => setRoomMinPlace(e.target.value)}
+                                    value={roomMinPlace}
+                                    placeholder="Place minimum"
+                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    />
+                                </div>
+
+                                <div className="w-full xl:w-1/2">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                    Place Maxi
+                                    </label>
+                                    <input
                                     type="text"
-                                    id="room-max-place"
+                                    id="user-name"
                                     onChange={(e) => setRoomMaxPlace(e.target.value)}
                                     value={roomMaxPlace}
-                                    placeholder="Nombre de place maximum"
+                                    placeholder="Place Maximum"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                    />
+                                </div>
                             </div>
+                            
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Adresse complète
@@ -167,7 +319,7 @@ const DataEditRoom = () => {
                                 <input
                                     type="text"
                                     id="user-phone"
-                                    onChange={(e) => setRoomAddress(e.target.value)}
+                                    onChange={ (e) => { setRoomAddress(e.target.value); handleGoogleMapLink(e) }}
                                     value={roomAddress}
                                     placeholder="Téléphone"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -186,12 +338,12 @@ const DataEditRoom = () => {
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
                             </div> 
-                            <div className="mb-4.5">
+                            <div className="mb-4.5 hidden">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Coordonnées GPS
                                 </label>
                             </div>
-                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">                                
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row hidden">                                
                                 <div className="w-full xl:w-1/2">
                                     <label className="mb-2.5 block text-black dark:text-white">
                                     Longitude
@@ -222,16 +374,8 @@ const DataEditRoom = () => {
                             </div>                            
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google Map <span className="text-meta-1">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="room-gmap-link"
-                                    onChange={(e) => setRoomGmapLink(e.target.value)}
-                                    value={roomGmapLink}
-                                    placeholder="Lien Google Map"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                    Lien Google Map <Link to={roomGmapLink} target="_blank"><InsertLinkIcon /></Link>
+                                </label>                               
                             </div>   
 
                             <div className="mb-4.5">
@@ -244,15 +388,10 @@ const DataEditRoom = () => {
                             
                             <div className="mb-4.5">
                                 <h3 className="mb-2.5 block text-black dark:text-white">
-                                    Commentaire
+                                    Commentaire (salle)
                                 </h3>
-                                <textarea
-                                onChange={(e) => setRoomComment(e.target.value)}
-                                value={roomComment}
-                                rows={6}
-                                placeholder="Commentaire sur la salle de formation"
-                                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                ></textarea>
+                                <ReactQuill theme="snow" value={roomComment} onChange={setRoomComment} />
+                                
                             </div>
                                                                         
                                 
@@ -301,10 +440,10 @@ const DataEditRoom = () => {
                                     Téléphone
                                 </label>
                                 </div>
-                                <div className="md:w-2/3">
+                                <div className="md:w-2/3">                                    
                                     <input 
                                         onChange={(e) => setRoomContactPhone(e.target.value)}
-                                        value={roomHalfDailyPrice}
+                                        value={roomContactPhone}
                                         placeholder="Standard" 
                                         className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
                                     />
@@ -328,15 +467,10 @@ const DataEditRoom = () => {
                         </div>     
                         <div className="mb-4.5 px-5 mt-5">
                             <h3 className="mb-2.5 block text-black dark:text-white">
-                                Commentaire
+                                Commentaire (contact)
                             </h3>
-                            <textarea
-                            onChange={(e) => setRoomContactComment(e.target.value)}
-                            value={roomContactComment}
-                            rows={6}
-                            placeholder="Commentaire pour le contact"
-                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            ></textarea>
+                            <ReactQuill theme="snow" value={roomContactComment} onChange={setRoomContactComment} />
+                            
                         </div>   
                                         
                     </div>   
@@ -380,20 +514,8 @@ const DataEditRoom = () => {
                         </div>
                         
                         <div className="flex flex-col gap-5.5 p-6.5 border border-stroke rounded mt-5 mx-5">
-                            <h3 className="">Tarif HT</h3>
-                            <div className="md:flex md:items-center mb-6">
-                                <div className="md:w-1/3">
-                                <label className="block  mb-1 md:mb-0 pr-4">
-                                    TVA
-                                </label>
-                                </div>
-                                <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomTvaRate(e.target.value)}
-                                        value={roomTvaRate}
-                                        placeholder="Taux TVA" className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
-                                </div>
-                            </div>
+                            
+                            
                             <div className="md:flex md:items-center mb-6">
                                 <div className="md:w-1/3">
                                 <label className="block  mb-1 md:mb-0 pr-4">
@@ -415,8 +537,8 @@ const DataEditRoom = () => {
                                 </div>
                                 <div className="md:w-2/3">
                                     <input 
-                                        onChange={(e) => setRoomHalfDailyPrice(e.target.value)}
-                                        value={roomHalfDailyPrice}
+                                        onChange={(e) => setRoomHalfDayPrice(e.target.value)}
+                                        value={roomHalfDayPrice}
                                         placeholder="Tarif demi-journée" 
                                         className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
                                     />
@@ -430,8 +552,8 @@ const DataEditRoom = () => {
                                 </div>
                                 <div className="md:w-2/3">
                                     <input 
-                                        onChange={(e) => setRoomHourlyPrice(e.target.value)}
-                                        value={roomHourlyPrice}
+                                        onChange={(e) => setRoomHourPrice(e.target.value)}
+                                        value={roomHourPrice}
                                         placeholder="Tarif par heure de la salle si applicable" 
                                         className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
                                     />

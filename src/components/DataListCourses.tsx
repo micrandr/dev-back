@@ -48,15 +48,34 @@ const DataListCourses = () => {
     () => [
       {
         accessorKey: 'courseName',
-        header: 'Nom de la salle',
+        header: 'Nom de formation',
       },
       {
         accessorKey: 'courseType',
-        header: 'Type de programme'
+        header: 'Type'
+      },
+      {
+        accessorKey: 'courseLocation',
+        header: 'Lieu'
       },
       {
         accessorKey: 'courseCategory',
         header: 'Catégorie',
+        size: 2
+      },
+      {
+        accessorKey: 'courseDuration',
+        header: 'Durée',
+        size: 2
+      },
+      {
+        accessorKey: 'coursePrice',
+        header: 'Tarif journalier',
+        size: 2
+      },
+      {
+        accessorKey: 'courseLevel',
+        header: 'Niveau',
         size: 2
       },
       {

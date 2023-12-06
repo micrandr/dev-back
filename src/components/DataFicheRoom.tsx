@@ -1,15 +1,29 @@
 import { useRef, useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import SwitcherHandicap from './SwitcherHandicap';
 import SwitcherAccessCar from './SwitcherAccessCar';
-import SwitcherEquipments from './SwitcherEquipments';
-import axios from '../api/axios';
+// import axios from '../api/axios';
 import { toast } from "react-hot-toast";
+import RoomDataService from "../services/RoomServices";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-const REGISTER_URL = '/rooms';
+// const REGISTER_URL = '/rooms';
 
 const DataFicheRoom = () => {
 
+    const navigate = useNavigate();
+    const params = useParams();
+    const roomId = params.id;
+
     const [roomLabel, setRoomLabel] = useState('');
+    const [roomMinPlace, setRoomMinPlace] = useState('');
     const [roomMaxPlace, setRoomMaxPlace] = useState('');
     const [roomAddress, setRoomAddress] = useState('');
     const [roomDepartment, setRoomDepartment] = useState('');
@@ -17,10 +31,15 @@ const DataFicheRoom = () => {
     const [roomCoordinateLattitude, setRoomCoordinateLattitude] = useState('');
     const [roomGmapLink, setRoomGmapLink] = useState('');    
     const [roomEquipments, setRoomEquipments] = useState('');
+    const [roomEquipmentInternetAccess, setRoomEquipmentInternetAccess] = useState('');
+    const [roomEquipmentVideoProjector, setRoomEquipmentVideoProjector] = useState('');
+    const [roomEquipmentTouchScreen, setRoomEquipmentTouchScreen] = useState('');
+    const [roomEquipmentPaperboard, setRoomEquipmentPaperboard] = useState('');
     const [roomPriceHT, setRoomPriceHT] = useState('');
     const [roomTvaRate, setRoomTvaRate] = useState('');
+    const [roomHourPrice, setRoomHourPrice] = useState('');
     const [roomDailyPrice, setRoomDailyPrice] = useState('');
-    const [roomHalfDailyPrice, setRoomHalfDailyPrice] = useState('');
+    const [roomHalfDayPrice, setRoomHalfDayPrice] = useState('');
     const [roomHours, setRoomHours] = useState('');
     const [roomHourlyPrice, setRoomHourlyPrice] = useState('');
     const [roomComment, setRoomComment] = useState('');
@@ -42,9 +61,50 @@ const DataFicheRoom = () => {
     const [roomDrinkDistributorComment, setRoomDrinkDistributorComment] = useState('');
     const [roomRestoDistributor, setRoomRestoDistributor] = useState('');
     const [roomRestoDistributorComment, setRoomRestoDistributorComment] = useState('');
-    
 
-   
+    const getRoomData = (id:string) => {
+        
+        RoomDataService.get(id)
+            .then(  response => {
+                setRoomLabel(response.data.roomLabel)  
+                setRoomMinPlace(response.data.roomMinPlace)
+                setRoomMaxPlace(response.data.roomMaxPlace)
+                setRoomAddress(response.data.roomAddress)
+                setRoomCoordinateLongitude(response.data.roomCoordinateLongitude)
+                setRoomCoordinateLattitude(response.data.roomCoordinateLattitude)
+                setRoomDepartment(response.data.roomDepartment)
+                setRoomGmapLink(response.data.roomGmapLink)
+                setRoomPriceHT(response.data.roomPriceHT)
+                setRoomHourPrice(response.data.roomHourPrice)
+                setRoomDailyPrice(response.data.roomDailyPrice)
+                setRoomHalfDayPrice(response.data.roomHalfDayPrice)
+                setRoomHourlyPrice(response.data.roomHourlyPrice)
+                setRoomHandicap(response.data.roomHandicap)
+                setRoomComment(response.data.roomComment)
+                setRoomAddress(response.data.roomAddress)
+                setRoomAddress(response.data.roomAddress)
+                setRoomContactFullname(response.data.roomContactFullname)
+                setRoomContactOccupation(response.data.roomContactOccupation)
+                setRoomContactPhone(response.data.roomContactPhone)
+                setRoomContactDirectLine(response.data.roomContactDirectLine)
+                setRoomContactComment(response.data.roomContactComment)
+                setRoomEquipmentInternetAccess(response.data.roomEquipmentInternetAccess)
+                setRoomEquipmentVideoProjector(response.data.roomEquipmentVideoProjector)
+                setRoomEquipmentTouchScreen(response.data.roomEquipmentTouchScreen)
+                setRoomEquipmentPaperboard(response.data.roomEquipmentPaperboard)          
+                
+            })
+
+        
+
+    }
+    
+    useEffect(() => {
+        if (roomId) {
+            getRoomData(roomId);
+        }
+        
+      }, [roomId]);      
 
     const handleCreateRoomData = async (e) => {
 
@@ -52,10 +112,10 @@ const DataFicheRoom = () => {
 
         try {
 
-            const response = await axios.post(
-                REGISTER_URL,
-                JSON.stringify({
+
+            const roomDataEdited = JSON.stringify({
                         roomLabel,
+                        roomMinPlace,
                         roomMaxPlace,
                         roomAddress,
                         roomDepartment,
@@ -65,8 +125,9 @@ const DataFicheRoom = () => {
                         roomEquipments,
                         roomPriceHT,
                         roomTvaRate,
+                        roomHourPrice,
                         roomDailyPrice,
-                        roomHalfDailyPrice,
+                        roomHalfDayPrice,
                         roomHours,
                         roomComment,
                         roomHandicap,
@@ -75,6 +136,7 @@ const DataFicheRoom = () => {
                         roomContactPhone,
                         roomContactDirectLine,
                         roomContactEmail,
+                        roomContactComment,
                         roomCommentAccess,
                         roomCarAccess,
                         roomCommonTransport,
@@ -84,16 +146,65 @@ const DataFicheRoom = () => {
                         roomDrinkDistributor,
                         roomDrinkDistributorComment,
                         roomRestoDistributor,
-                        roomRestoDistributorComment
-                    }),
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        withCredentials: false
-                    }
-                );
+                        roomRestoDistributorComment,
+                        roomEquipmentInternetAccess,
+                        roomEquipmentVideoProjector,
+                        roomEquipmentTouchScreen,
+                        roomEquipmentPaperboard
+                    })
+            RoomDataService.update(roomId, roomDataEdited)
+                .then( (response)=>{
+
+                    toast.success("Mise à jour bien effectuée")
+                    navigate('/rooms')
+                    
+                    
+                })
+                .then((error)=>{
+                    console.log("Erreur lors de la maj " + error)
+                })
+            // const response = await axios.post(
+            //     REGISTER_URL,
+            //     JSON.stringify({
+            //             roomLabel,
+            //             roomMaxPlace,
+            //             roomAddress,
+            //             roomDepartment,
+            //             roomCoordinateLongitude,
+            //             roomCoordinateLattitude,
+            //             roomGmapLink,
+            //             roomEquipments,
+            //             roomPriceHT,
+            //             roomTvaRate,
+            //             roomDailyPrice,
+            //             roomHalfDayPrice,
+            //             roomHours,
+            //             roomComment,
+            //             roomHandicap,
+            //             roomContactFullname,
+            //             roomContactOccupation,
+            //             roomContactPhone,
+            //             roomContactDirectLine,
+            //             roomContactEmail,
+            //             roomCommentAccess,
+            //             roomCarAccess,
+            //             roomCommonTransport,
+            //             roomCommonTransportComment,
+            //             roomTrainAccess,
+            //             roomTrainAccessComment,
+            //             roomDrinkDistributor,
+            //             roomDrinkDistributorComment,
+            //             roomRestoDistributor,
+            //             roomRestoDistributorComment
+            //         }),
+            //         {
+            //             headers: { 'Content-Type': 'application/json' },
+            //             withCredentials: false
+            //         }
+            //     );
 
             // console.log(response?.data);
-            toast.error("Problème lors de la création. Contactez l'administrateur.");
+            // toast.error("Problème lors de la création. Contactez l'administrateur.");
         }
         catch(err){ 
 
@@ -106,21 +217,54 @@ const DataFicheRoom = () => {
 
     }
 
+    const handleGoogleMapLink = (e) => {
+
+        const gLinkFirst = 'https://www.google.com/maps/place/'
+        setRoomAddress(e.target.value);
+        const addressValue  = e.target.value;
+        const gLink = gLinkFirst+encodeURIComponent(addressValue);        
+
+        console.log(gLink)
+        
+        //setUserGMapLink(gLink)
+        setRoomGmapLink(gLink)
+
+    }
+
+    const handleLinkEdit = () => {
+        const linkEdit = '/rooms/edit/' + roomId
+        navigate(linkEdit)
+    }
+
+    const handleLinkNew = () => {
+        const linkNew = '/rooms/create/'
+        navigate(linkNew)
+    }
+
+    
     return (
 
         <>
         <form action="#" onSubmit={handleCreateRoomData}>
-        <div className="flex justify-between">
+        <div className="flex justify-between mb-3">
                 <div className="flex p-2">
                    
                 </div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    {/**<button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>*/}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkEdit}>Modifier</Button>
+                        <Button onClick={handleLinkNew}>Nouveau</Button>
+                    </ButtonGroup>
                 </div>
             </div>
-            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
 
-                <div className="flex flex-col gap-9">
+                <div className="flex flex-col gap-9 ">
 
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -134,116 +278,76 @@ const DataFicheRoom = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Nom de la salle de formation <span className="text-meta-1">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    id="room-name"
-                                    onChange={(e) => setRoomLabel(e.target.value)}
-                                    value={roomLabel}
-                                    placeholder="Nom de la salle"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                    required
-                                />
+                                {roomLabel}
                             </div>
-                            <div className="mb-4.5">
-                                <label className="mb-2.5 block text-black dark:text-white">
-                                    Capacité maxi (nb places)
-                                </label>
-                                <input
-                                    type="text"
-                                    id="room-max-place"
-                                    onChange={(e) => setRoomMaxPlace(e.target.value)}
-                                    value={roomMaxPlace}
-                                    placeholder="Nombre de place maximum"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">                                
+                                <div className="w-full xl:w-1/2">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                    Place Mini
+                                    </label>
+                                    {roomMinPlace}
+                                </div>
+
+                                <div className="w-full xl:w-1/2">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                    Place Maxi
+                                    </label>
+                                    {roomMaxPlace}
+                                </div>
                             </div>
+                            
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Adresse complète
                                 </label>
-                                <input
-                                    type="text"
-                                    id="user-phone"
-                                    onChange={(e) => setRoomAddress(e.target.value)}
-                                    value={roomAddress}
-                                    placeholder="Téléphone"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                {roomAddress}
                             </div>
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Département
                                 </label>
-                                <input
-                                    type="text"
-                                    id="user-mobile"
-                                    onChange={(e) => setRoomDepartment(e.target.value)}
-                                    value={roomDepartment}
-                                    placeholder="Département"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                {roomDepartment}
                             </div> 
-                            <div className="mb-4.5">
+                            <div className="mb-4.5 hidden">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Coordonnées GPS
                                 </label>
                             </div>
-                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">                                
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row hidden">                                
                                 <div className="w-full xl:w-1/2">
                                     <label className="mb-2.5 block text-black dark:text-white">
                                     Longitude
                                     </label>
-                                    <input
-                                    type="text"
-                                    id="user-firstname"
-                                    onChange={(e) => setRoomCoordinateLongitude(e.target.value)}
-                                    value={roomCoordinateLongitude}
-                                    placeholder="Entrez la longitude"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                    />
+                                    {roomCoordinateLongitude}
                                 </div>
 
                                 <div className="w-full xl:w-1/2">
                                     <label className="mb-2.5 block text-black dark:text-white">
                                     Latitude
                                     </label>
-                                    <input
-                                    type="text"
-                                    id="user-name"
-                                    onChange={(e) => setRoomCoordinateLattitude(e.target.value)}
-                                    value={roomCoordinateLattitude}
-                                    placeholder="Entrer la lattitude"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                    />
+                                    {roomCoordinateLattitude}
                                 </div>
                             </div>                            
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google Map <span className="text-meta-1">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="room-gmap-link"
-                                    onChange={(e) => setRoomGmapLink(e.target.value)}
-                                    value={roomGmapLink}
-                                    placeholder="Lien Google Map"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
-                            </div>    
+                                    Lien Google Map <Link to={roomGmapLink} target="_blank"><InsertLinkIcon /></Link>
+                                </label>                               
+                            </div>   
+
+                            <div className="mb-4.5">
+                                {/* <FormGroup>
+                                    <FormControlLabel control={<Checkbox defaultChecked />} label="Accès Handicapé" />
+                                </FormGroup> */}
+                            </div> 
 
 
                             
                             <div className="mb-4.5">
                                 <h3 className="mb-2.5 block text-black dark:text-white">
-                                    Commentaire
+                                    Commentaire (salle)
                                 </h3>
-                                <textarea
-                                onChange={(e) => setRoomComment(e.target.value)}
-                                value={roomComment}
-                                rows={6}
-                                placeholder="Commentaire sur la salle de formation"
-                                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                ></textarea>
+                                {roomComment}
+                                
                             </div>
                                                                         
                                 
@@ -267,10 +371,7 @@ const DataFicheRoom = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomContactFullname(e.target.value)}
-                                        value={roomContactFullname}
-                                        placeholder="Entrez nom complet" className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
+                                    {roomContactFullname}
                                 </div>
                             </div>
                             <div className="md:flex md:items-center mb-6">
@@ -280,10 +381,7 @@ const DataFicheRoom = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomContactOccupation(e.target.value)}
-                                        value={roomContactOccupation}
-                                        placeholder="Intitulé du contact" className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
+                                {roomContactOccupation}
                                 </div>
                             </div>
                             <div className="md:flex md:items-center mb-6">
@@ -292,13 +390,8 @@ const DataFicheRoom = () => {
                                     Téléphone
                                 </label>
                                 </div>
-                                <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomContactPhone(e.target.value)}
-                                        value={roomHalfDailyPrice}
-                                        placeholder="Standard" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
-                                    />
+                                <div className="md:w-2/3">                                    
+                                    {roomContactPhone}
                                 </div>
                             </div>
                             <div className="md:flex md:items-center mb-6">
@@ -308,26 +401,16 @@ const DataFicheRoom = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomContactDirectLine(e.target.value)}
-                                        value={roomContactDirectLine}
-                                        placeholder="Ligne direct" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
-                                    />
+                                    {roomContactDirectLine}
                                 </div>
                             </div>                                                                                                              
                         </div>     
                         <div className="mb-4.5 px-5 mt-5">
                             <h3 className="mb-2.5 block text-black dark:text-white">
-                                Commentaire
+                                Commentaire (contact)
                             </h3>
-                            <textarea
-                            onChange={(e) => setRoomContactComment(e.target.value)}
-                            value={roomContactComment}
-                            rows={6}
-                            placeholder="Commentaire pour le contact"
-                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            ></textarea>
+                            {roomContactComment}
+                            
                         </div>   
                                         
                     </div>   
@@ -349,7 +432,16 @@ const DataFicheRoom = () => {
 
                             <div className="mb-4.5">
                                 <div className="flex flex-col gap-5.5 p-6.5">
-                                    <SwitcherEquipments />                                                                            
+                                Accès Internet : <br />
+                                Video projecteur : <br />
+                                Ecran tactile : <br />
+                                Paperboard : <br />
+                                {/* <FormGroup>
+                                    <FormControlLabel control={<Checkbox defaultChecked />} label="Accès Internet" />
+                                    <FormControlLabel control={<Checkbox />} label="Video projecteur" />
+                                    <FormControlLabel control={<Checkbox />} label="Ecran tactile" />
+                                    <FormControlLabel control={<Checkbox />} label="Paperboard" />
+                                </FormGroup>                                                                             */}
                                 </div>
                             </div>
 
@@ -366,20 +458,8 @@ const DataFicheRoom = () => {
                         </div>
                         
                         <div className="flex flex-col gap-5.5 p-6.5 border border-stroke rounded mt-5 mx-5">
-                            <h3 className="">Tarif HT</h3>
-                            <div className="md:flex md:items-center mb-6">
-                                <div className="md:w-1/3">
-                                <label className="block  mb-1 md:mb-0 pr-4">
-                                    TVA
-                                </label>
-                                </div>
-                                <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomTvaRate(e.target.value)}
-                                        value={roomTvaRate}
-                                        placeholder="Taux TVA" className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
-                                </div>
-                            </div>
+                            
+                            
                             <div className="md:flex md:items-center mb-6">
                                 <div className="md:w-1/3">
                                 <label className="block  mb-1 md:mb-0 pr-4">
@@ -387,10 +467,7 @@ const DataFicheRoom = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomDailyPrice(e.target.value)}
-                                        value={roomDailyPrice}
-                                        placeholder="Tarif journalier" className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
+                                {roomDailyPrice}
                                 </div>
                             </div>
                             <div className="md:flex md:items-center mb-6">
@@ -400,12 +477,7 @@ const DataFicheRoom = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomHalfDailyPrice(e.target.value)}
-                                        value={roomHalfDailyPrice}
-                                        placeholder="Tarif demi-journée" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
-                                    />
+                                 {roomHalfDayPrice}
                                 </div>
                             </div>
                             <div className="md:flex md:items-center mb-6">
@@ -415,12 +487,7 @@ const DataFicheRoom = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomHourlyPrice(e.target.value)}
-                                        value={roomHourlyPrice}
-                                        placeholder="Tarif par heure de la salle si applicable" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
-                                    />
+                                    {roomHourPrice}
                                 </div>
                             </div>                                                                                                              
                         </div>                       

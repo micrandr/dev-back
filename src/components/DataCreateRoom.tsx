@@ -1,15 +1,24 @@
 import { useRef, useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import SwitcherHandicap from './SwitcherHandicap';
 import SwitcherAccessCar from './SwitcherAccessCar';
-import SwitcherEquipments from './SwitcherEquipments';
-import axios from '../api/axios';
+// import axios from '../api/axios';
 import { toast } from "react-hot-toast";
+import RoomDataService from "../services/RoomServices";
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
-const REGISTER_URL = '/rooms';
+// const REGISTER_URL = '/rooms';
 
 const DataCreateRoom = () => {
 
+    const navigate = useNavigate();
+
     const [roomLabel, setRoomLabel] = useState('');
+    const [roomMinPlace, setRoomMinPlace] = useState('');
     const [roomMaxPlace, setRoomMaxPlace] = useState('');
     const [roomAddress, setRoomAddress] = useState('');
     const [roomDepartment, setRoomDepartment] = useState('');
@@ -21,6 +30,12 @@ const DataCreateRoom = () => {
     const [roomTvaRate, setRoomTvaRate] = useState('');
     const [roomDailyPrice, setRoomDailyPrice] = useState('');
     const [roomHalfDailyPrice, setRoomHalfDailyPrice] = useState('');
+    const [roomEquipmentInternetAccess, setRoomEquipmentInternetAccess] = useState('');
+    const [roomEquipmentVideoProjector, setRoomEquipmentVideoProjector] = useState('');
+    const [roomEquipmentTouchScreen, setRoomEquipmentTouchScreen] = useState('');
+    const [roomEquipmentPaperboard, setRoomEquipmentPaperboard] = useState('');
+
+
     const [roomHours, setRoomHours] = useState('');
     const [roomHourlyPrice, setRoomHourlyPrice] = useState('');
     const [roomComment, setRoomComment] = useState('');
@@ -52,48 +67,95 @@ const DataCreateRoom = () => {
 
         try {
 
-            const response = await axios.post(
-                REGISTER_URL,
+            const roomData =  
                 JSON.stringify({
-                        roomLabel,
-                        roomMaxPlace,
-                        roomAddress,
-                        roomDepartment,
-                        roomCoordinateLongitude,
-                        roomCoordinateLattitude,
-                        roomGmapLink,
-                        roomEquipments,
-                        roomPriceHT,
-                        roomTvaRate,
-                        roomDailyPrice,
-                        roomHalfDailyPrice,
-                        roomHours,
-                        roomComment,
-                        roomHandicap,
-                        roomContactFullname,
-                        roomContactOccupation,
-                        roomContactPhone,
-                        roomContactDirectLine,
-                        roomContactEmail,
-                        roomCommentAccess,
-                        roomCarAccess,
-                        roomCommonTransport,
-                        roomCommonTransportComment,
-                        roomTrainAccess,
-                        roomTrainAccessComment,
-                        roomDrinkDistributor,
-                        roomDrinkDistributorComment,
-                        roomRestoDistributor,
-                        roomRestoDistributorComment
-                    }),
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        withCredentials: false
-                    }
-                );
+                            roomLabel,
+                            roomMinPlace,
+                            roomMaxPlace,
+                            roomAddress,
+                            roomDepartment,
+                            roomCoordinateLongitude,
+                            roomCoordinateLattitude,
+                            roomGmapLink,
+                            roomEquipmentInternetAccess,
+                            roomEquipmentVideoProjector,
+                            roomEquipmentTouchScreen,
+                            roomEquipmentPaperboard,
+                            roomPriceHT,
+                            roomTvaRate,
+                            roomDailyPrice,
+                            roomHalfDailyPrice,
+                            roomHours,
+                            roomComment,
+                            roomHandicap,
+                            roomContactFullname,
+                            roomContactOccupation,
+                            roomContactPhone,
+                            roomContactDirectLine,
+                            roomContactEmail,
+                            roomCommentAccess,
+                            roomCarAccess,
+                            roomCommonTransport,
+                            roomCommonTransportComment,
+                            roomTrainAccess,
+                            roomTrainAccessComment,
+                            roomDrinkDistributor,
+                            roomDrinkDistributorComment,
+                            roomRestoDistributor,
+                            roomRestoDistributorComment
+                        });
+
+            RoomDataService.create(roomData)
+            .then( (response)=>{                
+                toast.success("Salle de formation bien créée.");
+                navigate('/rooms')
+            });
+
+            // const response = await axios.post(
+            //     REGISTER_URL,
+            //     JSON.stringify({
+            //             roomLabel,
+            //             roomMaxPlace,
+            //             roomAddress,
+            //             roomDepartment,
+            //             roomCoordinateLongitude,
+            //             roomCoordinateLattitude,
+            //             roomGmapLink,
+            //             roomEquipmentInternetAccess,
+            //             roomEquipmentVideoProjector,
+            //             roomEquipmentTouchScreen,
+            //             roomEquipmentPaperboard,
+            //             roomPriceHT,
+            //             roomTvaRate,
+            //             roomDailyPrice,
+            //             roomHalfDailyPrice,
+            //             roomHours,
+            //             roomComment,
+            //             roomHandicap,
+            //             roomContactFullname,
+            //             roomContactOccupation,
+            //             roomContactPhone,
+            //             roomContactDirectLine,
+            //             roomContactEmail,
+            //             roomCommentAccess,
+            //             roomCarAccess,
+            //             roomCommonTransport,
+            //             roomCommonTransportComment,
+            //             roomTrainAccess,
+            //             roomTrainAccessComment,
+            //             roomDrinkDistributor,
+            //             roomDrinkDistributorComment,
+            //             roomRestoDistributor,
+            //             roomRestoDistributorComment
+            //         }),
+            //         {
+            //             headers: { 'Content-Type': 'application/json' },
+            //             withCredentials: false
+            //         }
+            //     );
 
             // console.log(response?.data);
-            toast.error("Problème lors de la création. Contactez l'administrateur.");
+           
         }
         catch(err){ 
 
@@ -104,6 +166,14 @@ const DataCreateRoom = () => {
 
         
 
+    }
+
+    const handleRoomEquipmentInternetAccess = (e, v) => {
+        if(v){
+            setRoomEquipmentInternetAccess("1")
+        }else{
+            setRoomEquipmentInternetAccess("0")
+        }
     }
 
     return (
@@ -118,9 +188,9 @@ const DataCreateRoom = () => {
                     <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
                 </div>
             </div>
-            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
 
-                <div className="flex flex-col gap-9">
+                <div className="flex flex-col gap-9 bg-white p-3">
 
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
@@ -144,19 +214,35 @@ const DataCreateRoom = () => {
                                     required
                                 />
                             </div>
-                            <div className="mb-4.5">
-                                <label className="mb-2.5 block text-black dark:text-white">
-                                    Capacité maxi (nb places)
-                                </label>
-                                <input
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">                                
+                                <div className="w-full xl:w-1/2">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                    Place Mini
+                                    </label>
+                                    <input
                                     type="text"
-                                    id="room-max-place"
+                                    id="user-firstname"
+                                    onChange={(e) => setRoomMinPlace(e.target.value)}
+                                    value={roomMinPlace}
+                                    placeholder="Place minimum"
+                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    />
+                                </div>
+
+                                <div className="w-full xl:w-1/2">
+                                    <label className="mb-2.5 block text-black dark:text-white">
+                                    Place Maxi
+                                    </label>
+                                    <input
+                                    type="text"
+                                    id="user-name"
                                     onChange={(e) => setRoomMaxPlace(e.target.value)}
                                     value={roomMaxPlace}
-                                    placeholder="Nombre de place maximum"
+                                    placeholder="Place Maximum"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
-                            </div>
+                                    />
+                                </div>
+                            </div>                           
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Adresse complète
@@ -166,7 +252,7 @@ const DataCreateRoom = () => {
                                     id="user-phone"
                                     onChange={(e) => setRoomAddress(e.target.value)}
                                     value={roomAddress}
-                                    placeholder="Téléphone"
+                                    placeholder="Adresse / CP / Ville"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
                             </div>
@@ -183,12 +269,12 @@ const DataCreateRoom = () => {
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
                             </div> 
-                            <div className="mb-4.5">
+                            <div className="mb-4.5 hidden">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Coordonnées GPS
                                 </label>
                             </div>
-                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">                                
+                            <div className="mb-4.5 flex flex-col gap-6 xl:flex-row hidden">                                
                                 <div className="w-full xl:w-1/2">
                                     <label className="mb-2.5 block text-black dark:text-white">
                                     Longitude
@@ -219,7 +305,7 @@ const DataCreateRoom = () => {
                             </div>                            
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google Map <span className="text-meta-1">*</span>
+                                    Lien Google Map 
                                 </label>
                                 <input
                                     type="text"
@@ -237,13 +323,8 @@ const DataCreateRoom = () => {
                                 <h3 className="mb-2.5 block text-black dark:text-white">
                                     Commentaire
                                 </h3>
-                                <textarea
-                                onChange={(e) => setRoomComment(e.target.value)}
-                                value={roomComment}
-                                rows={6}
-                                placeholder="Commentaire sur la salle de formation"
-                                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                ></textarea>
+                                <ReactQuill theme="snow" value={roomComment} onChange={setRoomComment} />
+                                
                             </div>
                                                                         
                                 
@@ -295,7 +376,7 @@ const DataCreateRoom = () => {
                                 <div className="md:w-2/3">
                                     <input 
                                         onChange={(e) => setRoomContactPhone(e.target.value)}
-                                        value={roomHalfDailyPrice}
+                                        value={roomContactPhone}
                                         placeholder="Standard" 
                                         className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
                                     />
@@ -321,13 +402,8 @@ const DataCreateRoom = () => {
                             <h3 className="mb-2.5 block text-black dark:text-white">
                                 Commentaire
                             </h3>
-                            <textarea
-                            onChange={(e) => setRoomContactComment(e.target.value)}
-                            value={roomContactComment}
-                            rows={6}
-                            placeholder="Commentaire pour le contact"
-                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            ></textarea>
+                            <ReactQuill theme="snow" value={roomContactComment} onChange={setRoomContactComment} />
+                            
                         </div>   
                                         
                     </div>   
@@ -349,7 +425,12 @@ const DataCreateRoom = () => {
 
                             <div className="mb-4.5">
                                 <div className="flex flex-col gap-5.5 p-6.5">
-                                    <SwitcherEquipments />                                                                            
+                                <FormGroup>
+                                    <FormControlLabel control={<Checkbox defaultChecked onChange={handleRoomEquipmentInternetAccess} />} label="Accès Internet"  />
+                                    <FormControlLabel control={<Checkbox />} label="Video projecteur" />
+                                    <FormControlLabel control={<Checkbox />} label="Ecran tactile" />
+                                    <FormControlLabel control={<Checkbox />} label="Paperboard" />
+                                </FormGroup>                                                                             
                                 </div>
                             </div>
 
@@ -365,21 +446,8 @@ const DataCreateRoom = () => {
                             </h3>
                         </div>
                         
-                        <div className="flex flex-col gap-5.5 p-6.5 border border-stroke rounded mt-5 mx-5">
-                            <h3 className="">Tarif HT</h3>
-                            <div className="md:flex md:items-center mb-6">
-                                <div className="md:w-1/3">
-                                <label className="block  mb-1 md:mb-0 pr-4">
-                                    TVA
-                                </label>
-                                </div>
-                                <div className="md:w-2/3">
-                                    <input 
-                                        onChange={(e) => setRoomTvaRate(e.target.value)}
-                                        value={roomTvaRate}
-                                        placeholder="Taux TVA" className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
-                                </div>
-                            </div>
+                        <div className="flex flex-col gap-5.5 p-6.5 border border-stroke rounded mt-5 mx-5">                          
+                           
                             <div className="md:flex md:items-center mb-6">
                                 <div className="md:w-1/3">
                                 <label className="block  mb-1 md:mb-0 pr-4">

@@ -1,14 +1,14 @@
 import Breadcrumb from '../../components/Breadcrumb';
-import DataEditRoom from "../../components/DataEditRoom";
+import DataFicheRoom from "../../components/DataFicheRoom";
 
 const FicheRoom = () => {
 
     return (
 
         <>
-            <Breadcrumb pageName="Salle de formation" />
+            <Breadcrumb pageName="Fiche Salle de formation" />
 
-            <DataEditRoom />
+            <DataFicheRoom />
         </>
     )
 }

@@ -59,8 +59,17 @@ const DataListRooms = () => {
         header: 'Adresse'
       },
       {
+        accessorKey: 'roomDepartment',
+        header: 'Departement'
+      },
+      {
+        accessorKey: 'roomMinPlace',
+        header: 'Place Min.',
+        size: 2
+      },
+      {
         accessorKey: 'roomMaxPlace',
-        header: 'Capacité',
+        header: 'Place Maxi',
         size: 2
       },
       { 
@@ -72,8 +81,32 @@ const DataListRooms = () => {
             </>
           )
         },
-        header: 'Accès',
+        header: 'Accès handicap',
         size: 2
+      },
+      {
+        accessorKey: 'roomPriceHT',
+        header: 'Prix journalier'
+      },
+      {
+        accessorKey: 'roomHalfDayPrice',
+        header: 'Prix demi-journée'
+      },
+      {
+        accessorKey: 'roomHourPrice',
+        header: 'Tarif horaire'
+      },
+      {
+        accessorKey: 'roomContactFullname',
+        header: 'Contact'
+      },
+      {
+        accessorKey: 'roomContactPhone',
+        header: 'Téléphone'
+      },
+      {
+        accessorKey: 'roomContactDirectLine',
+        header: 'Direct'
       },
       {
         id: "actionColumnRoom",

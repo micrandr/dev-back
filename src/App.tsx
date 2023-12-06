@@ -17,10 +17,11 @@ function App() {
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
-    const isAuthenticated = !!Cookies.get('auth');
-    if(!isAuthenticated){
-      navigate('/auth/signin')
-    }
+    
+    // const isAuthenticated = !!Cookies.get('auth');
+    // if(!isAuthenticated){
+    //   navigate('/auth/signin')
+    // }
 
   }, []);
 

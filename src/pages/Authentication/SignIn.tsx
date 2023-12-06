@@ -7,39 +7,39 @@ import Logo from '/logo-capnumerique.jpg';
 
 const SignIn = () => {
   
-  const [userEmail, setUserEmail] = useState();
-  const [userPasswd, setUserPasswd] = useState();
+  const [userEmail, setUserEmail] = useState('');
+  const [userPasswd, setUserPasswd] = useState('');
   const navigate = useNavigate();
 
-  const testAuthData = {
-    userEmail: 'capnumerique@formationbtp.fr',
-    userPasswd: 'Capnum123.',
-  }; 
+  // const testAuthData = {
+  //   userEmail: 'capnumerique@formationbtp.fr',
+  //   userPasswd: 'Capnum123',
+  // }; 
 
-  const authenticateUser = (username, password) => {
-    if (username === testAuthData.userEmail && password === testAuthData.userPasswd) { 
-      const userData = {
-        username,
-        password,
-      };
-      const expirationTime = new Date(new Date().getTime() + 60000);
-      Cookies.set('auth', JSON.stringify(userData), { expires: expirationTime });
-      return true;
-    }
-    return false;
-  };
+  // const authenticateUser = (username, password) => {
+  //   if (username === testAuthData.userEmail && password === testAuthData.userPasswd) { 
+  //     const userData = {
+  //       username,
+  //       password,
+  //     };
+  //     const expirationTime = new Date(new Date().getTime() + 60000);
+  //     Cookies.set('auth', JSON.stringify(userData), { expires: expirationTime });
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const isAuthenticated = authenticateUser(userEmail, userPasswd);
-    if (isAuthenticated) {
-      toast.error('Problème de connexion')
-      navigate('/');
-      window.location.reload();
-    } else {
-      // Show error message or perform other actions for failed authentication
-      toast.error('Problème de connexion')
-    }
+    // const isAuthenticated = authenticateUser(userEmail, userPasswd);
+    // if (isAuthenticated) {
+    //   toast.error('Problème de connexion')
+    //   navigate('/');
+    //   window.location.reload();
+    // } else {
+    //   // Show error message or perform other actions for failed authentication
+    //   toast.error('Problème de connexion')
+    // }
   };
 
   return (

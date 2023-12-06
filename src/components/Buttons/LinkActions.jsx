@@ -1,3 +1,4 @@
+import { Link, useNavigate } from 'react-router-dom';
 import { Box, Button, IconButton } from '@mui/material';
 import {
   Edit as EditIcon,
@@ -6,10 +7,16 @@ import {
 } from '@mui/icons-material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Swal from 'sweetalert2';
+import UserDataService from '../../services/UserServices';
+import RoomDataService from '../../services/RoomServices';
+import CourseDataService from '../../services/CourseServices';
+import CompanyDataService from '../../services/CompanyServices';
 
 const LinkActions = ( link ) => {
-
     
+
+    const navigate = useNavigate()
+    let redirectLink = ''
 
     const handleDeleteObject = (objectId, objectName, objectData) => {
 
@@ -22,6 +29,39 @@ const LinkActions = ( link ) => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Oui, supprimer'
           }).then((result) => {
+
+            if(result.isConfirmed) {
+
+                switch(objectName){
+                    case "users":
+                        UserDataService.remove(objectId)
+                        redirectLink = '/users'
+                        break;
+                    case "rooms":
+                        RoomDataService.remove(objectId)
+                        redirectLink = '/rooms'
+                        break;
+                    case "course":
+                        CourseDataService.remove(objectId)
+                        redirectLink = '/courses'
+                        break;
+
+                    case "compagnies":
+                        CompanyDataService.remove(objectId)
+                        redirectLink = '/courses'
+                        break;
+                }     
+                
+                Swal.fire(
+                    'Supprimé !',
+                    'Cet objet a été bien supprimé.',
+                    'success'
+                ) 
+
+            }
+
+            location.reload()
+
             // if (result.isConfirmed) {
       
             //   UserDataService.remove(id)

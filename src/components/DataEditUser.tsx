@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from 'react-hot-toast';
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
@@ -10,6 +10,15 @@ import UserService from '../services/UserServices';
 import DocumentManager from "./Documents/DocumentManager";
 import DocumentList from "./Documents/DocumentList";
 import DocumentServices from "../services/DocumentServices";
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import FileUpload from "./FileUpload";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 
 //import ListUserType from "./Lists/ListUserType";
@@ -46,6 +55,9 @@ const DataEditUser = () => {
     const [userCountry, setUserCountry] = useState('');
     const [userGmapLink, setUserGMapLink] = useState('');
     const [userSkills, setUserSkills] = useState('');
+    const [certifiedQuailopi, setCertifiedQuailopi] = useState('');
+    const [checkCertifiedQuailopi, setCheckCertifiedQuailopi] = useState(false)
+    const [userComment, setUserComment] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [companyType, setCompanyType] = useState('');
     const [companyTva, setCompanyTva] = useState('');
@@ -58,6 +70,7 @@ const DataEditUser = () => {
     const [priceTransport, setPriceTransport] = useState('');
     const [comment, setComment] = useState('');
     const [docData, setDocData] = useState('');
+    const [selectedSkillsValues, setSelectedSkillsValues] = useState([])
     //const { id } = useParams();    
 
     const countriesDataList = useMemo( () => countryList().getData(userCountry), [])
@@ -102,6 +115,7 @@ const DataEditUser = () => {
             setUserAddress(response.data.userAddress)
             setUserPostalCode(response.data.userPostalCode)
             setUserDepartment(response.data.userDepartment)
+            setCertifiedQuailopi(response.data.certifiedQuailopi)
             setUserSkills(response.data.userSkills)
             setCompanyName(response.data.companyName)
             setUserCountry(response.data.userCountry)
@@ -126,9 +140,10 @@ const DataEditUser = () => {
 
         if (userId) {
             getUserData(userId);
-        }        
+        }  
         
-      }, [userId]);
+
+    }, [userId]);
 
 
 
@@ -153,6 +168,7 @@ const DataEditUser = () => {
                 companyType,
                 companyTva,                
                 rayonAction,
+                certifiedQuailopi,
                 pricePresentielDaily,
                 pricePresentielHalfDay,
                 pricePresentielRayonAction,
@@ -165,22 +181,11 @@ const DataEditUser = () => {
             UserService.update(userId, userData)
             .then( response => {
                 if(response.status == 200) {
-                    // toast.success("Mise à jour bien effectué");
-                    toast.error("Problème lors de la mise à jour. Contactez l'administrateur.");
+                    toast.success("Mise à jour bien effectué");
+                    // toast.error("Problème lors de la mise à jour. Contactez l'administrateur.");
                     navigate('/users');
                 }
-            });
-
-            // const response = axios.put(
-            //     USER_GET_URL + userId,
-            //     userData),
-            //         {
-            //             headers: { 'Content-Type': 'application/json' },
-            //             withCredentials: false
-            //         }
-            //     ).then( res => {
-            //         toast.success('Enregistrement bien effectué')
-            //     });            
+            });        
                
         }
         catch(error){      
@@ -200,23 +205,61 @@ const DataEditUser = () => {
     }
 
     const handleUserSkills = (e) => {    
-        let values = []
-        e.forEach( (option)=>{
-            //console.log(option.value)
-            values.push(option.value)
-        }) 
-        let data = values.join(',')
-        setUserSkills(data)
+
+        setSelectedSkillsValues( Array.isArray(e) ? e.map( x => x.value ) : [])
+        setUserSkills(JSON.stringify(selectedSkillsValues))
+
+        // let values = []
+        // e.forEach( (option)=>{
+        //     //console.log(option.value)
+        //     values.push(option?.value)
+        // }) 
+        // let data = values.join(',')
+        // setUserSkills(data)
+
+
+    }
+
+    const handleCertifiedQualiopi = (e) =>{
+        if(e.target.checked){
+            setCertifiedQuailopi("1")
+        }else{
+            setCertifiedQuailopi("0")
+        }
+    }
+
+    const handleRayonAction = (e) => {
+        setRayonAction(e)
+    }
+
+    const handleCheckQualifiedQuailopi = (e) => {
+        if(certifiedQuailopi=="0"){
+            // checkCertifiedQuailopi = 
+        }
+        
+    }
+
+    const handleLinkPreview = (e) => {
+        const urlFiche = '/users/fiche/' + userId
+        navigate(urlFiche)
     }
 
     return (
 
         <>
         <form action="#" onSubmit={handleEditUserData}>
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-3">
                 <div className="flex"></div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    {/**<button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>*/}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button type="submit">Enregistrer</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
@@ -232,6 +275,7 @@ const DataEditUser = () => {
                         </div>
                         
                         <div className="p-6.5">
+                            <FileUpload />
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className="w-full xl:w-1/2">
                                     <label className="mb-2.5 block text-black dark:text-white">
@@ -265,7 +309,7 @@ const DataEditUser = () => {
                             </div>
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Tél. <span className="text-meta-1">*</span>
+                                    Tél. 
                                 </label>
                                 <input
                                     type="text"
@@ -273,21 +317,24 @@ const DataEditUser = () => {
                                     onChange={(e) => setUserPhone(e.target.value)}
                                     value={userPhone}
                                     placeholder="Téléphone"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                    required
+                                    className="required w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    
+                                    
                                 />
                             </div>
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Portable
+                                    Portable <span className="text-meta-1">*</span>
                                 </label>
                                 <input
                                     type="text"
                                     id="userMobile"
                                     onChange={(e) => setUserMobile(e.target.value)}
                                     value={userMobile}
-                                    placeholder="Téléphone"
+                                    placeholder="Mobile"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    required
+                                    
                                 />
                             </div> 
                             <div className="mb-4.5">
@@ -318,7 +365,7 @@ const DataEditUser = () => {
                                     required
                                 />
                             </div>  
-                            <div className="mb-4.5">
+                            <div className="mb-4.5 hidden">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Code postal
                                 </label>
@@ -344,7 +391,7 @@ const DataEditUser = () => {
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
                             </div> 
-                            <div className="mb-4.5">
+                            <div className="mb-4.5 hidden">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Pays
                                 </label>
@@ -359,7 +406,7 @@ const DataEditUser = () => {
                             </div>       
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google map
+                                    Lien Google map <Link to={userGmapLink} target="_blank"><InsertLinkIcon /></Link>
                                 </label>
                                 <input
                                     type="text"
@@ -367,35 +414,47 @@ const DataEditUser = () => {
                                     onChange={(e) => setUserGMapLink(e.target.value)}
                                     value={userGmapLink}
                                     placeholder="Lien vers la fiche sur Google map"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    className="w-full hidden rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
                             </div>    
                             <div>
                                 <label className="mb-3 block text-black dark:text-white">
-                                Compétences {userSkills}
+                                Compétences
                                 </label>
+
+                                {/** value={
+                                    userSkillsList.filter(option => 
+                                        option.value === userSkills )
+                                    */}
                                 
                                 <Select 
                                     options={userSkillsList}                                     
                                     onChange={handleUserSkills}
                                     value={
-                                        userSkillsList.filter(option => 
-                                           option.value === userSkills )
+                                        userSkillsList.filter(obj=>userSkills.includes(obj.value))
                                      }
                                     isMulti={true}
                                 />                                
                             </div>
-                            {/* <!-- Toggle switch input --> */}
+
                             <div>
-                                <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-                                <h3 className="font-medium text-black dark:text-white">
-                                    Certifié Qualiopi
-                                </h3>
+                                <div className="flex flex-col mt-5">                                    
+                                    <FormGroup>
+                                        <FormControlLabel control={<Checkbox checked={(certifiedQuailopi=="1")?true:false} onClick={handleCertifiedQualiopi} />} label="Certifié Quailopi" />
+                                    </FormGroup> 
                                 </div>
-                                <div className="flex flex-col gap-5.5 p-6.5">                                    
-                                    <SwitcherQuailopi />
+                            </div>  
+
+                            <div>
+                                <div className="border-b mt-5 py-5 border-stroke dark:border-strokedark">
+                                    <h3 className="font-medium text-black dark:text-white">
+                                        Commentaire
+                                    </h3>
                                 </div>
-                            </div> 
+                                <div className="flex flex-col">
+                                    <ReactQuill theme="snow" value={comment} onChange={setComment} />
+                                </div>
+                            </div>
                         </div>                        
                     </div>
                 </div>
@@ -441,11 +500,13 @@ const DataEditUser = () => {
                                 />
                             </div>
 
-                            <div className="mb-4.5 hidden">
-                                <div className="flex flex-col gap-5.5 p-6.5">
-                                    <SwitcherTVA />                                                                            
+                            <div>
+                                <div className="flex flex-col mt-5">                                    
+                                    <FormGroup>
+                                        <FormControlLabel control={<Checkbox defaultChecked />} label="Soumis à la TVA" />
+                                    </FormGroup> 
                                 </div>
-                            </div>
+                            </div> 
 
                             <DocumentManager />
 
@@ -500,12 +561,8 @@ const DataEditUser = () => {
                                     Rayon d'action
                                 </label>
                                 </div>
-                                <div className="md:w-2/3">
-                                    <textarea 
-                                        name="rayon-action"
-                                        onChange={ (e) => setRayonAction( e.target.value) }
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500">
-                                    </textarea>
+                                <div className="md:w-2/3">    
+                                    <ReactQuill theme="snow" value={rayonAction} onChange={handleRayonAction} />
                                 </div>
                             </div>                                                                                   
                         </div>
@@ -543,29 +600,6 @@ const DataEditUser = () => {
                             </div>                                                                                                             
                         </div>                   
                     </div>                      
-
-                    {/* <!-- Textarea Fields --> */}
-                    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-                        <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-                            <h3 className="font-medium text-black dark:text-white">
-                                Commentaire
-                            </h3>
-                        </div>
-                        <div className="flex flex-col gap-5.5 p-6.5">                                                
-                            <textarea
-                            id="comment"
-                            onChange={(e) => setComment(e.target.value)}
-                            value={comment}
-                            rows={6}
-                            placeholder="Default textarea"
-                            className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            >{comment}</textarea>
-                        </div>
-
-                        <div>
-                            
-                        </div>
-                    </div>              
 
                 </div>
 
