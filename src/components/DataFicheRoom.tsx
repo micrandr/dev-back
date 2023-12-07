@@ -62,6 +62,21 @@ const DataFicheRoom = () => {
     const [roomRestoDistributor, setRoomRestoDistributor] = useState('');
     const [roomRestoDistributorComment, setRoomRestoDistributorComment] = useState('');
 
+    const [openCar, setOpenCar] = useState(false)
+    const [carComment, setCarComment] = useState('')
+
+    const [openCommon, setOpenCommon] = useState(false)
+    const [commonComment, setCommonComment] = useState('')
+
+    const [openTrain, setOpenTrain] = useState(false)
+    const [trainComment, setTrainComment] = useState('')
+
+    const [openDrink, setOpenDrink] = useState(false)
+    const [drinkComment, setDrinkComment] = useState('')
+
+    const [openRestore, setOpenRestore] = useState(false)
+    const [restoreComment, setRestoreComment] = useState('')
+
     const getRoomData = (id:string) => {
         
         RoomDataService.get(id)
@@ -92,6 +107,11 @@ const DataFicheRoom = () => {
                 setRoomEquipmentVideoProjector(response.data.roomEquipmentVideoProjector)
                 setRoomEquipmentTouchScreen(response.data.roomEquipmentTouchScreen)
                 setRoomEquipmentPaperboard(response.data.roomEquipmentPaperboard)          
+                setCarComment(response.data.carComment) 
+                setTrainComment(response.data.trainComment) 
+                setCommonComment(response.data.commonComment) 
+                setDrinkComment(response.data.drinkComment) 
+                setRestoreComment(response.data.restoreComment) 
                 
             })
 
@@ -432,10 +452,15 @@ const DataFicheRoom = () => {
 
                             <div className="mb-4.5">
                                 <div className="flex flex-col gap-5.5 p-6.5">
-                                Accès Internet : <br />
-                                Video projecteur : <br />
-                                Ecran tactile : <br />
-                                Paperboard : <br />
+                                Accès Internet : {(roomEquipmentInternetAccess=="1")?"Oui":"Non"}<br />
+                                Video projecteur : {(roomEquipmentVideoProjector=="1")?"Oui":"Non"}<br />
+                                Ecran tactile : {(roomEquipmentTouchScreen=="1")?"Oui":"Non"}<br />
+                                Paperboard : {(roomEquipmentPaperboard=="1")?"Oui":"Non"} <br />
+                                Accès voiture : {carComment}<br />
+                                Transport en commun : <br />
+                                Accès Train : <br />
+                                Distributeur boisson : <br />
+                                Distributeur restauration : {}
                                 {/* <FormGroup>
                                     <FormControlLabel control={<Checkbox defaultChecked />} label="Accès Internet" />
                                     <FormControlLabel control={<Checkbox />} label="Video projecteur" />
