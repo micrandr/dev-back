@@ -15,6 +15,7 @@ import Checkbox from '@mui/material/Checkbox';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import FileUpload from "./FileUpload";
+import { formatDepartment } from "../common/Utils";
 
 
 const userSkillsList = [ 
@@ -162,6 +163,8 @@ const DataCreateUser = () => {
         setUserAddress(e.target.value);
         const addressValue  = e.target.value;
         const gLink = gLinkFirst+encodeURIComponent(addressValue);        
+
+        setUserDepartment(formatDepartment(addressValue))
         
         //setUserGMapLink(gLink)
         setUserGMapLink(gLink)
@@ -187,7 +190,6 @@ const DataCreateUser = () => {
     const handleCompanyType = (e) => {
         setCompanyType( e.value )
     }
-
     
 
     return (

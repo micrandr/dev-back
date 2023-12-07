@@ -9,3 +9,17 @@ export const getUserNameById = (id) => {
     })
     return user_name;
 }
+
+export const formatDepartment = (input) => {
+
+    let pattern = input.match(/(\d){5}/)
+    let department = pattern?.[0].substr(0,2)
+    
+    return department
+
+}
+
+export const formatGMapLink = (input) => {
+    const gLinkFirst = 'https://www.google.com/maps/place/'        
+    return gLinkFirst + encodeURIComponent(input); 
+}

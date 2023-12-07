@@ -19,6 +19,7 @@ import Button from '@mui/material/Button';
 import FileUpload from "./FileUpload";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { formatDepartment } from "../common/Utils";
 
 
 //import ListUserType from "./Lists/ListUserType";
@@ -244,6 +245,13 @@ const DataEditUser = () => {
         navigate(urlFiche)
     }
 
+    const formatUserDepartment = (input) => {
+
+       const dept = formatDepartment(input) 
+        setUserDepartment(dept)
+
+    }
+
     return (
 
         <>
@@ -358,7 +366,7 @@ const DataEditUser = () => {
                                 <input
                                     type="text"
                                     id="userAddress"
-                                    onChange={(e) => setUserAddress(e.target.value)}
+                                    onChange={(e) => { setUserAddress(e.target.value); formatUserDepartment(e.target.value) }}
                                     value={userAddress}
                                     placeholder="Adresse / CP / Ville"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"

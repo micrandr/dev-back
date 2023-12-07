@@ -8,6 +8,10 @@ import RoomDataService from "../services/RoomServices";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import { formatDepartment, formatGMapLink } from "../common/Utils";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -29,7 +33,7 @@ const DataCreateRoom = () => {
     const [roomPriceHT, setRoomPriceHT] = useState('');
     const [roomTvaRate, setRoomTvaRate] = useState('');
     const [roomDailyPrice, setRoomDailyPrice] = useState('');
-    const [roomHalfDailyPrice, setRoomHalfDailyPrice] = useState('');
+    const [roomHalfDayPrice, setRoomHalfDayPrice] = useState('');
     const [roomEquipmentInternetAccess, setRoomEquipmentInternetAccess] = useState('');
     const [roomEquipmentVideoProjector, setRoomEquipmentVideoProjector] = useState('');
     const [roomEquipmentTouchScreen, setRoomEquipmentTouchScreen] = useState('');
@@ -37,7 +41,7 @@ const DataCreateRoom = () => {
 
 
     const [roomHours, setRoomHours] = useState('');
-    const [roomHourlyPrice, setRoomHourlyPrice] = useState('');
+    const [roomHourPrice, setRoomHourPrice] = useState('');
     const [roomComment, setRoomComment] = useState('');
     const [roomHandicap, setRoomHandicap] = useState('');
     const [roomContactFullname, setRoomContactFullname] = useState('');
@@ -57,6 +61,21 @@ const DataCreateRoom = () => {
     const [roomDrinkDistributorComment, setRoomDrinkDistributorComment] = useState('');
     const [roomRestoDistributor, setRoomRestoDistributor] = useState('');
     const [roomRestoDistributorComment, setRoomRestoDistributorComment] = useState('');
+
+    const [openCar, setOpenCar] = useState(false)
+    const [carComment, setCarComment] = useState('')
+
+    const [openCommon, setOpenCommon] = useState(false)
+    const [commonComment, setCommonComment] = useState('')
+
+    const [openTrain, setOpenTrain] = useState(false)
+    const [trainComment, setTrainComment] = useState('')
+
+    const [openDrink, setOpenDrink] = useState(false)
+    const [drinkComment, setDrinkComment] = useState('')
+
+    const [openRestore, setOpenRestore] = useState(false)
+    const [restoreComment, setRestoreComment] = useState('')
     
 
    
@@ -84,7 +103,8 @@ const DataCreateRoom = () => {
                             roomPriceHT,
                             roomTvaRate,
                             roomDailyPrice,
-                            roomHalfDailyPrice,
+                            roomHalfDayPrice,
+                            roomHourPrice,
                             roomHours,
                             roomComment,
                             roomHandicap,
@@ -102,7 +122,12 @@ const DataCreateRoom = () => {
                             roomDrinkDistributor,
                             roomDrinkDistributorComment,
                             roomRestoDistributor,
-                            roomRestoDistributorComment
+                            roomRestoDistributorComment,
+                            carComment,
+                            commonComment,
+                            trainComment,
+                            drinkComment,
+                            restoreComment
                         });
 
             RoomDataService.create(roomData)
@@ -110,51 +135,6 @@ const DataCreateRoom = () => {
                 toast.success("Salle de formation bien créée.");
                 navigate('/rooms')
             });
-
-            // const response = await axios.post(
-            //     REGISTER_URL,
-            //     JSON.stringify({
-            //             roomLabel,
-            //             roomMaxPlace,
-            //             roomAddress,
-            //             roomDepartment,
-            //             roomCoordinateLongitude,
-            //             roomCoordinateLattitude,
-            //             roomGmapLink,
-            //             roomEquipmentInternetAccess,
-            //             roomEquipmentVideoProjector,
-            //             roomEquipmentTouchScreen,
-            //             roomEquipmentPaperboard,
-            //             roomPriceHT,
-            //             roomTvaRate,
-            //             roomDailyPrice,
-            //             roomHalfDailyPrice,
-            //             roomHours,
-            //             roomComment,
-            //             roomHandicap,
-            //             roomContactFullname,
-            //             roomContactOccupation,
-            //             roomContactPhone,
-            //             roomContactDirectLine,
-            //             roomContactEmail,
-            //             roomCommentAccess,
-            //             roomCarAccess,
-            //             roomCommonTransport,
-            //             roomCommonTransportComment,
-            //             roomTrainAccess,
-            //             roomTrainAccessComment,
-            //             roomDrinkDistributor,
-            //             roomDrinkDistributorComment,
-            //             roomRestoDistributor,
-            //             roomRestoDistributorComment
-            //         }),
-            //         {
-            //             headers: { 'Content-Type': 'application/json' },
-            //             withCredentials: false
-            //         }
-            //     );
-
-            // console.log(response?.data);
            
         }
         catch(err){ 
@@ -163,7 +143,6 @@ const DataCreateRoom = () => {
 
 
         }
-
         
 
     }
@@ -176,16 +155,98 @@ const DataCreateRoom = () => {
         }
     }
 
+    const handleLinkList = () => {        
+        navigate('/rooms')
+    }
+
+    const handleFormatRoomDepartment = (input) => {
+
+        const dept = formatDepartment(input)         
+        let gmapLink = formatGMapLink(input)
+        setRoomDepartment(dept)
+        setRoomGmapLink(gmapLink)
+ 
+     }
+
+     const handleCarAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenCar(true)
+        }else{
+            setOpenCar(false)
+        }
+    }
+
+    const handleCommonAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenCommon(true)
+        }else{
+            setOpenCommon(false)
+        }
+    }  
+
+    const handleTrainAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenTrain(true)
+        }else{
+            setOpenTrain(false)
+        }
+    }    
+
+    const handleDrinkAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenDrink(true)
+        }else{
+            setOpenDrink(false)
+        }
+    }   
+    
+    const handleRestoreAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenRestore(true)
+        }else{
+            setOpenRestore(false)
+        }
+    }       
+
+    const handleCarComment = (e) => {
+        setCarComment(e)
+    }
+
+    const handleCommonComment = (e) => {
+        setCommonComment(e)
+    }
+
+    const handleTrainComment = (e) => {
+        setTrainComment(e)
+    }
+
+    const handleDrinkComment = (e) => {
+        setDrinkComment(e)
+    }
+
+    const handleRestoreComment = (e) => {
+        setRestoreComment(e)
+    }
+    
+
     return (
 
         <>
         <form action="#" onSubmit={handleCreateRoomData}>
-        <div className="flex justify-between">
+        <div className="flex justify-between mb-3">
                 <div className="flex p-2">
                    
                 </div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    {/* <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button> */}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >                        
+                        <Button type="submit">Enregistrer</Button>
+                        <Button onClick={handleLinkList}>Annuler</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
@@ -249,8 +310,8 @@ const DataCreateRoom = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    id="user-phone"
-                                    onChange={(e) => setRoomAddress(e.target.value)}
+                                    id="room-address"
+                                    onChange={(e) => { setRoomAddress(e.target.value); handleFormatRoomDepartment(e.target.value) }}
                                     value={roomAddress}
                                     placeholder="Adresse / CP / Ville"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -305,7 +366,7 @@ const DataCreateRoom = () => {
                             </div>                            
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google Map 
+                                    Lien Google Map <Link to={roomGmapLink} target="_blank"><InsertLinkIcon /></Link>
                                 </label>
                                 <input
                                     type="text"
@@ -313,7 +374,7 @@ const DataCreateRoom = () => {
                                     onChange={(e) => setRoomGmapLink(e.target.value)}
                                     value={roomGmapLink}
                                     placeholder="Lien Google Map"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    className="hidden w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
                             </div>    
 
@@ -430,8 +491,20 @@ const DataCreateRoom = () => {
                                     <FormControlLabel control={<Checkbox />} label="Video projecteur" />
                                     <FormControlLabel control={<Checkbox />} label="Ecran tactile" />
                                     <FormControlLabel control={<Checkbox />} label="Paperboard" />
+
+                                    <FormControlLabel control={<Checkbox onChange={handleCarAccess} />} label="Accès voiture"  />
+                                    <ReactQuill theme="snow" value={carComment} className={`${openCar? "block": "hidden"} text-[20px]`} onChange={handleCarComment} />
+                                    <FormControlLabel control={<Checkbox onChange={handleCommonAccess} />} label="Accès transport en commun"    />
+                                    <ReactQuill theme="snow" value={commonComment} className={`${openCommon? "block": "hidden"} text-[20px]`}  onChange={handleCommonComment} />
+                                    <FormControlLabel control={<Checkbox onChange={handleTrainAccess} />} label="Accès train"  />
+                                    <ReactQuill theme="snow" value={trainComment} className={`${openTrain? "block": "hidden"} text-[20px]`} />
+                                    <FormControlLabel control={<Checkbox onChange={handleDrinkAccess}  />} label="Distributeur de boisson"  />
+                                    <ReactQuill theme="snow" value={drinkComment} className={`${openDrink? "block": "hidden"} text-[20px]`} />
+                                    <FormControlLabel control={<Checkbox onChange={handleRestoreAccess} />} label="Distributeur de restauration"  />
+                                    <ReactQuill theme="snow" value={restoreComment} className={`${openRestore? "block": "hidden"} text-[20px]`} />
                                 </FormGroup>                                                                             
                                 </div>
+                                
                             </div>
 
                         </div>
@@ -469,8 +542,8 @@ const DataCreateRoom = () => {
                                 </div>
                                 <div className="md:w-2/3">
                                     <input 
-                                        onChange={(e) => setRoomHalfDailyPrice(e.target.value)}
-                                        value={roomHalfDailyPrice}
+                                        onChange={(e) => setRoomHalfDayPrice(e.target.value)}
+                                        value={roomHalfDayPrice}
                                         placeholder="Tarif demi-journée" 
                                         className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
                                     />
@@ -484,8 +557,8 @@ const DataCreateRoom = () => {
                                 </div>
                                 <div className="md:w-2/3">
                                     <input 
-                                        onChange={(e) => setRoomHourlyPrice(e.target.value)}
-                                        value={roomHourlyPrice}
+                                        onChange={(e) => setRoomHourPrice(e.target.value)}
+                                        value={roomHourPrice}
                                         placeholder="Tarif par heure de la salle si applicable" 
                                         className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
                                     />

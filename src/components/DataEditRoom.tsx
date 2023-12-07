@@ -40,8 +40,7 @@ const DataEditRoom = () => {
     const [roomHourPrice, setRoomHourPrice] = useState('');
     const [roomDailyPrice, setRoomDailyPrice] = useState('');
     const [roomHalfDayPrice, setRoomHalfDayPrice] = useState('');
-    const [roomHours, setRoomHours] = useState('');
-    const [roomHourlyPrice, setRoomHourlyPrice] = useState('');
+    const [roomHours, setRoomHours] = useState('');    
     const [roomComment, setRoomComment] = useState('');
     const [roomHandicap, setRoomHandicap] = useState('');
     const [roomContactFullname, setRoomContactFullname] = useState('');
@@ -62,6 +61,21 @@ const DataEditRoom = () => {
     const [roomRestoDistributor, setRoomRestoDistributor] = useState('');
     const [roomRestoDistributorComment, setRoomRestoDistributorComment] = useState('');
 
+    const [openCar, setOpenCar] = useState(false)
+    const [carComment, setCarComment] = useState('')
+
+    const [openCommon, setOpenCommon] = useState(false)
+    const [commonComment, setCommonComment] = useState('')
+
+    const [openTrain, setOpenTrain] = useState(false)
+    const [trainComment, setTrainComment] = useState('')
+
+    const [openDrink, setOpenDrink] = useState(false)
+    const [drinkComment, setDrinkComment] = useState('')
+
+    const [openRestore, setOpenRestore] = useState(false)
+    const [restoreComment, setRestoreComment] = useState('')
+
     const getRoomData = (id:string) => {
         
         RoomDataService.get(id)
@@ -78,7 +92,7 @@ const DataEditRoom = () => {
                 setRoomHourPrice(response.data.roomHourPrice)
                 setRoomDailyPrice(response.data.roomDailyPrice)
                 setRoomHalfDayPrice(response.data.roomHalfDayPrice)
-                setRoomHourlyPrice(response.data.roomHourlyPrice)
+                setRoomHourPrice(response.data.roomHourPrice)
                 setRoomHandicap(response.data.roomHandicap)
                 setRoomComment(response.data.roomComment)
                 setRoomAddress(response.data.roomAddress)
@@ -91,7 +105,12 @@ const DataEditRoom = () => {
                 setRoomEquipmentInternetAccess(response.data.roomEquipmentInternetAccess)
                 setRoomEquipmentVideoProjector(response.data.roomEquipmentVideoProjector)
                 setRoomEquipmentTouchScreen(response.data.roomEquipmentTouchScreen)
-                setRoomEquipmentPaperboard(response.data.roomEquipmentPaperboard)          
+                setRoomEquipmentPaperboard(response.data.roomEquipmentPaperboard)  
+                setCarComment(response.data.carComment)        
+                setCommonComment(response.data.commonComment)        
+                setTrainComment(response.data.trainComment)
+                setDrinkComment(response.data.drinkComment)
+                setRestoreComment(response.data.restoreComment)
                 
             })
 
@@ -102,9 +121,8 @@ const DataEditRoom = () => {
     useEffect(() => {
         if (roomId) {
             getRoomData(roomId);
-        }
-        
-      }, [roomId]);      
+        }        
+    }, [roomId]);      
 
     const handleCreateRoomData = async (e) => {
 
@@ -150,7 +168,12 @@ const DataEditRoom = () => {
                         roomEquipmentInternetAccess,
                         roomEquipmentVideoProjector,
                         roomEquipmentTouchScreen,
-                        roomEquipmentPaperboard
+                        roomEquipmentPaperboard,
+                        carComment,
+                        commonComment,
+                        trainComment,
+                        drinkComment,
+                        restoreComment
                     })
             RoomDataService.update(roomId, roomDataEdited)
                 .then( (response)=>{
@@ -163,48 +186,7 @@ const DataEditRoom = () => {
                 .then((error)=>{
                     console.log("Erreur lors de la maj " + error)
                 })
-            // const response = await axios.post(
-            //     REGISTER_URL,
-            //     JSON.stringify({
-            //             roomLabel,
-            //             roomMaxPlace,
-            //             roomAddress,
-            //             roomDepartment,
-            //             roomCoordinateLongitude,
-            //             roomCoordinateLattitude,
-            //             roomGmapLink,
-            //             roomEquipments,
-            //             roomPriceHT,
-            //             roomTvaRate,
-            //             roomDailyPrice,
-            //             roomHalfDayPrice,
-            //             roomHours,
-            //             roomComment,
-            //             roomHandicap,
-            //             roomContactFullname,
-            //             roomContactOccupation,
-            //             roomContactPhone,
-            //             roomContactDirectLine,
-            //             roomContactEmail,
-            //             roomCommentAccess,
-            //             roomCarAccess,
-            //             roomCommonTransport,
-            //             roomCommonTransportComment,
-            //             roomTrainAccess,
-            //             roomTrainAccessComment,
-            //             roomDrinkDistributor,
-            //             roomDrinkDistributorComment,
-            //             roomRestoDistributor,
-            //             roomRestoDistributorComment
-            //         }),
-            //         {
-            //             headers: { 'Content-Type': 'application/json' },
-            //             withCredentials: false
-            //         }
-            //     );
-
-            // console.log(response?.data);
-            // toast.error("Problème lors de la création. Contactez l'administrateur.");
+            
         }
         catch(err){ 
 
@@ -236,6 +218,45 @@ const DataEditRoom = () => {
         navigate(linkPreview)
     }
 
+    const handleCarAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenCar(true)
+        }else{
+            setOpenCar(false)
+        }
+    }
+
+    const handleCommonAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenCommon(true)
+        }else{
+            setOpenCommon(false)
+        }
+    }  
+
+    const handleTrainAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenTrain(true)
+        }else{
+            setOpenTrain(false)
+        }
+    }    
+
+    const handleDrinkAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenDrink(true)
+        }else{
+            setOpenDrink(false)
+        }
+    }   
+    
+    const handleRestoreAccess = ( e ) => {
+        if(e.target.checked){
+            setOpenRestore(true)
+        }else{
+            setOpenRestore(false)
+        }
+    }       
     
     return (
 
@@ -497,6 +518,17 @@ const DataEditRoom = () => {
                                     <FormControlLabel control={<Checkbox />} label="Video projecteur" />
                                     <FormControlLabel control={<Checkbox />} label="Ecran tactile" />
                                     <FormControlLabel control={<Checkbox />} label="Paperboard" />
+
+                                    <FormControlLabel control={<Checkbox checked={(openCar)?true:false} onChange={handleCarAccess} />} label="Accès voiture"  />
+                                    <ReactQuill theme="snow" value={carComment} className={`${openCar? "block": "hidden"} text-[20px]`} />
+                                    <FormControlLabel control={<Checkbox checked={(openCommon)?true:false} onChange={handleCommonAccess} />} label="Accès transport en commun"  />
+                                    <ReactQuill theme="snow" value={commonComment} className={`${openCommon? "block": "hidden"} text-[20px]`} />
+                                    <FormControlLabel control={<Checkbox checked={(openTrain)?true:false} onChange={handleTrainAccess} />} label="Accès train"  />
+                                    <ReactQuill theme="snow" value={trainComment} className={`${openTrain? "block": "hidden"} text-[20px]`} />
+                                    <FormControlLabel control={<Checkbox checked={(openDrink)?true:false} onChange={handleDrinkAccess}  />} label="Distributeur de boisson"  />
+                                    <ReactQuill theme="snow" value={drinkComment} className={`${openDrink? "block": "hidden"} text-[20px]`} />
+                                    <FormControlLabel control={<Checkbox checked={(openRestore)?true:false} onChange={handleRestoreAccess} />} label="Distributeur de restauration"  />
+                                    <ReactQuill theme="snow" value={restoreComment} className={`${openRestore? "block": "hidden"} text-[20px]`} />
                                 </FormGroup>                                                                            
                                 </div>
                             </div>

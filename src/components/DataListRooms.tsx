@@ -85,7 +85,7 @@ const DataListRooms = () => {
         size: 2
       },
       {
-        accessorKey: 'roomPriceHT',
+        accessorKey: 'roomDailyPrice',
         header: 'Prix journalier'
       },
       {
