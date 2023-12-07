@@ -386,8 +386,7 @@ const DataFicheUser = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">
-                                    <textarea className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500">
-                                    </textarea>
+                                    {pricePresentielRayonAction}
                                 </div>
                             </div>                                                                                   
                         </div>
