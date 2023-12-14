@@ -192,7 +192,7 @@ const DataEditCompany = () => {
                         variant="contained"
                         aria-label="Disabled elevation buttons"
                     >
-                        <Button onClick={handleLinkPreview}>Previsualiser</Button>
+                        <Button onClick={handleLinkPreview}>Visualiser</Button>
                         <Button type="submit">Enregistrer</Button>
                     </ButtonGroup>
                 </div>

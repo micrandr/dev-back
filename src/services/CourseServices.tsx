@@ -40,6 +40,10 @@ const updateCategory = (id, data) => {
     return http.put(`/course_categories/${id}`, data);
 };
 
+const removeCategory = id => {
+    return http.delete(`/course_categories/${id}`);
+};
+
 const getCategory = id => {
     return http.get(`/course_categories/${id}`);
 }
@@ -65,7 +69,8 @@ const CourseService = {
     getAllCategories,
     createCategory,
     getCategory,
-    updateCategory
+    updateCategory,
+    removeCategory
 };
 
   

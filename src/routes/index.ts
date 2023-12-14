@@ -42,6 +42,19 @@ const TypeCourses = lazy(() => import('../pages/Courses/TypeCourses'));
 const TypeCreateCourse = lazy(() => import('../pages/Courses/TypeCreateCourse'));
 const TypeEditCourse = lazy(() => import('../pages/Courses/TypeEditCourse'));
 const TypeFicheCourse = lazy(() => import('../pages/Courses/TypeFicheCourse'));
+
+//Level
+const LevelList = lazy(() => import('../pages/Courses/LevelList'));
+const LevelCreate = lazy(() => import('../pages/Courses/LevelCreate'));
+const LevelEdit = lazy(() => import('../pages/Courses/LevelEdit'));
+const LevelView = lazy(() => import('../pages/Courses/LevelView'));
+
+//Typologie
+const TypeList = lazy(() => import('../pages/Users/TypeList'));
+const TypeCreate = lazy(() => import('../pages/Users/TypeCreate'));
+const TypeEdit = lazy(() => import('../pages/Users/TypeEdit'));
+const TypeView = lazy(() => import('../pages/Users/TypeView'));
+
 const ListRooms = lazy(() => import('../pages/Rooms/ListRooms'));
 const CreateRoom = lazy(() => import('../pages/Rooms/CreateRoom'));
 const EditRoom = lazy(() => import('../pages/Rooms/EditRoom'));
@@ -110,6 +123,26 @@ const coreRoutes = [
     component: categoryFicheCourse,
   },
   {
+    path: '/levels',
+    title: 'Niveau',
+    component: LevelList,
+  },
+  {
+    path: '/levels/create',
+    title: 'Créer un niveau',
+    component: LevelCreate,
+  }, 
+  {
+    path: '/levels/edit/:id',
+    title: 'Modifier un niveau',
+    component: LevelEdit,
+  }, 
+  {
+    path: '/levels/fiche/:id',
+    title: 'Visualiser un niveau',
+    component: LevelView
+  },      
+  {
     path: '/rooms',
     title: 'Salles',
     component: ListRooms,
@@ -173,7 +206,12 @@ const coreRoutes = [
     path: '/users/fiche/:id',
     title: 'Fiche utilisateur',
     component: FicheUsers,
-  },
+  },  
+  {
+    path: '/userskills',
+    title: 'Liste compétences',
+    component: CreateUserSkills,
+  },    
   {
     path: '/userskills/create',
     title: 'Fiche compétences',
@@ -209,6 +247,26 @@ const coreRoutes = [
     title: 'UsersAccess',
     component: CreateUserAccess,
   },
+  {
+    path: '/types',
+    title: 'Type entreprise',
+    component: TypeList,
+  },
+  {
+    path: '/types/create',
+    title: 'Créer un type entreprise',
+    component: TypeCreate,
+  }, 
+  {
+    path: '/types/edit/:id',
+    title: 'Modifier un niveau',
+    component: TypeEdit,
+  }, 
+  {
+    path: '/types/fiche/:id',
+    title: 'Visualiser un niveau',
+    component: TypeView,
+  }, 
   {
     path: '/settings',
     title: 'Settings',

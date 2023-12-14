@@ -6,6 +6,7 @@ import SwitcherTVA from './SwitcherTVA';
 import Select, {InputActionMeta} from 'react-select'
 import countryList from 'react-select-country-list'
 import UserService from "../services/UserServices";
+import TypeService from "../services/TypeServices";
 import DocumentManager from "./Documents/DocumentManager";
 import DocumentList from "./Documents/DocumentList";
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
@@ -73,6 +74,9 @@ const DataCreateUser = () => {
     const [userComment, setUserComment] = useState('');
     const [comment, setComment] = useState('');
     const [selectedSkillsValues, setSelectedSkillsValues] = useState([])
+
+    // set company types data to list
+    const [typesData, setTypesData] = useState<any[]>([]);
 
 
     const handleUserSkills = ( 
@@ -190,6 +194,32 @@ const DataCreateUser = () => {
     const handleCompanyType = (e) => {
         setCompanyType( e.value )
     }
+
+    const getAllCompanyTypes = () => {
+        TypeService.getAll()
+            .then( response=>{
+                console.log(response.data['hydra:member'])
+                //setTypesData(response.data['hydra:member'])
+            })
+    }
+
+    useEffect(() => {
+        getAllCompanyTypes()        
+    }, []);
+
+    const listTypeFromDB = typesData.map(item => {
+        const container = {
+            value: null,
+            label: null
+        };
+
+
+    
+        container.value = item.id;
+        container.label = item.typeName;
+    
+        return container;
+    })
     
 
     return (
@@ -406,6 +436,9 @@ const DataCreateUser = () => {
                                     Type de structure <span className="text-meta-1">*</span>
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
+                                    <Select 
+                                            options={listTypeFromDB}
+                                        />
                                     <Select                                        
                                         options={dataUserType}
                                         value = {

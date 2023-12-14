@@ -73,7 +73,7 @@ const DataCategoryCourses = () => {
           
           return (
             
-            <LinkAction editLink={roomEditUrl} ficheLink={roomFicheUrl}  />
+            <LinkAction editLink={roomEditUrl} ficheLink={roomFicheUrl} objectId={row.id} objectName="categories" objectData={CourseDataService} />
           )
         }
       }

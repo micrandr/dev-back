@@ -11,6 +11,8 @@ import UserDataService from '../../services/UserServices';
 import RoomDataService from '../../services/RoomServices';
 import CourseDataService from '../../services/CourseServices';
 import CompanyDataService from '../../services/CompanyServices';
+import LevelDataService from '../../services/LevelServices';
+import TypeDataService from '../../services/TypeServices';
 
 const LinkActions = ( link ) => {
     
@@ -46,10 +48,23 @@ const LinkActions = ( link ) => {
                         redirectLink = '/courses'
                         break;
 
+                    case "levels":
+                        LevelDataService.remove(objectId)
+                        redirectLink = '/levels'
+                        break;
+
                     case "compagnies":
                         CompanyDataService.remove(objectId)
                         redirectLink = '/courses'
                         break;
+                    
+                    case "types":
+                        TypeDataService.remove(objectId)
+                        redirectLink = '/types'
+                        break;
+
+                    case "categories":
+                        CourseDataService.removeCategory(objectId)
                 }     
                 
                 Swal.fire(

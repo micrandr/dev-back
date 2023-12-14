@@ -2,6 +2,8 @@ import { useRef, useState, useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import CourseService from "../services/CourseServices";
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 import Select from 'react-select'
 
 
@@ -75,16 +77,35 @@ const DataCategoryFicheCourse = () => {
 
     }
 
+    const handleLinkEdit = (e) => {
+        const urlEdit = '/courses/categories/edit/' + categoryId
+        navigate(urlEdit)
+
+    }
+
+    const handleLinkNew = (e) => {
+        const urlCreate = '/courses/categories/create/'
+        navigate(urlCreate)
+
+    }
+
     return (
 
         <>
         <form action="#" onSubmit={handleCreateRoomData}>
-        <div className="flex justify-between">
+        <div className="flex justify-between mb-3">
                 <div className="flex p-2">
                    
                 </div>
-                <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                <div className="flex">                    
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkEdit}>Editer</Button>
+                        <Button onClick={handleLinkNew}>Nouveau</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
