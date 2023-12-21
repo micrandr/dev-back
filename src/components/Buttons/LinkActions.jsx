@@ -13,6 +13,7 @@ import CourseDataService from '../../services/CourseServices';
 import CompanyDataService from '../../services/CompanyServices';
 import LevelDataService from '../../services/LevelServices';
 import TypeDataService from '../../services/TypeServices';
+import SkillDataService from '../../services/SkillServices';
 
 const LinkActions = ( link ) => {
     
@@ -61,6 +62,11 @@ const LinkActions = ( link ) => {
                     case "types":
                         TypeDataService.remove(objectId)
                         redirectLink = '/types'
+                        break;
+
+                    case "skills":
+                        SkillDataService.remove(objectId)
+                        redirectLink = '/userskills'
                         break;
 
                     case "categories":

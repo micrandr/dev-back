@@ -4,7 +4,7 @@ import DataCreateUserSkills from '../../components/DataCreateUserSkills';
 const createUserSkills = () => {
     return (
         <>
-            <Breadcrumb pageName="Création nouveau formateur" />
+            <Breadcrumb pageName="Création une nouvelle compétence" />
 
             <div className="flex flex-col gap-10">        
                 <DataCreateUserSkills />

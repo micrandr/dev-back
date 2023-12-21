@@ -31,6 +31,8 @@ const CreateCompany = lazy(() => import('../pages/Users/CreateCompany'));
 const EditCompany = lazy(() => import('../pages/Users/EditCompany'));
 const FicheCompany = lazy(() => import('../pages/Users/FicheCompany'));
 const CreateUserSkills = lazy(() => import('../pages/Users/CreateUserSkills'));
+const ListUserSkills = lazy(() => import('../pages/Users/ListUserSkills'));
+const ViewUserSkill = lazy(() => import('../pages/Users/ViewUserSkill'));
 const ListCourses = lazy(() => import('../pages/Courses/ListCourses'));
 const CreateCourse = lazy(() => import('../pages/Courses/CreateCourse'));
 const EditCourse = lazy(() => import('../pages/Courses/EditCourse'));
@@ -211,13 +213,18 @@ const coreRoutes = [
   {
     path: '/userskills',
     title: 'Liste compétences',
-    component: CreateUserSkills,
+    component: ListUserSkills,
   },    
   {
     path: '/userskills/create',
     title: 'Fiche compétences',
     component: CreateUserSkills,
   },  
+  {
+    path: '/userskills/fiche/:id',
+    title: 'Fiche compétence',
+    component: ViewUserSkill,
+  },    
   {
     path: '/learners',
     title: 'Inscrits',
