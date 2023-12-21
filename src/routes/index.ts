@@ -29,6 +29,7 @@ const ListCustomers = lazy(() => import('../pages/Users/ListCustomers'));
 const ListCompagnies = lazy(() => import('../pages/Users/ListCompagnies'));
 const CreateCompany = lazy(() => import('../pages/Users/CreateCompany'));
 const EditCompany = lazy(() => import('../pages/Users/EditCompany'));
+const FicheCompany = lazy(() => import('../pages/Users/FicheCompany'));
 const CreateUserSkills = lazy(() => import('../pages/Users/CreateUserSkills'));
 const ListCourses = lazy(() => import('../pages/Courses/ListCourses'));
 const CreateCourse = lazy(() => import('../pages/Courses/CreateCourse'));
@@ -321,6 +322,11 @@ const coreRoutes = [
     path: '/compagnies/edit/:id',
     title: 'Modifier une entreprise',
     component: EditCompany
+  },  
+  {
+    path: '/compagnies/fiche/:id',
+    title: 'Fiche entreprise',
+    component: FicheCompany
   },  
   {
     path: '/react-table',

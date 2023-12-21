@@ -63,6 +63,7 @@ const DataEditCourse = () => {
     const [courseCategory, setCourseCategory] = useState('');       
     const [courseComment, setCourseComment] = useState('');   
     const [courseDuration, setCourseDuration] = useState('');    
+    const [courseDurationHour, setCourseDurationHour] = useState(''); 
     const [courseTarget, setCourseTarget] = useState('');  
     const [courseLocation, setCourseLocation] = useState('');
     const [courseProgram, setCourseProgram] = useState('');
@@ -84,6 +85,7 @@ const DataEditCourse = () => {
             setCourseTarget(response.data.courseTarget)
             setCoursePrice(response.data.coursePrice)
             setCourseDuration(response.data.courseDuration)
+            setCourseDurationHour(response.data.courseDurationHour)
             setCourseLocation(response.data.courseLocation)
             setCourseCategory(response.data.courseCategory)            
             setCourseRequirement(response.data.courseRequirement)            
@@ -311,9 +313,16 @@ const DataEditCourse = () => {
 
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Durée
+                                    Durée en jours
                                 </label>
                                 {courseDuration}
+                            </div> 
+
+                            <div className="mb-4.5">
+                                <label className="mb-2.5 block text-black dark:text-white">
+                                    Durée en heures
+                                </label>
+                                {courseDurationHour}
                             </div> 
                     
                             

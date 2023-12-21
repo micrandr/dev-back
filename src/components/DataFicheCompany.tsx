@@ -7,22 +7,18 @@ import countryList from 'react-select-country-list'
 import SwitcherQuailopi from './SwitcherQuailopi';
 import SwitcherTVA from './SwitcherTVA';
 import CompanyDataService from "../services/CompanyServices";
-import TypeService from "../services/TypeServices";
 import DocumentManager from "./Documents/DocumentManager";
 import DocumentList from "./Documents/DocumentList";
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 // import ButtonActions from "./Buttons/ButtonActions";
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Button from '@mui/material/Button';
-
-
-const REGISTER_URL = '/compagnies';
 
 
 
-const DataEditCompany = () => {
+const DataFicheCompany = () => {
 
     const navigate = useNavigate();
     const params = useParams();
@@ -68,8 +64,6 @@ const DataEditCompany = () => {
     const [companyData, setCompanyData] = useState(initialCompanyDataState);
     const [currentCompany, setCurrentCompany] = useState(initialCompanyDataState);
 
-    const [typesData, setTypesData] = useState<any[]>([]);
-
     const [selected, setSelected] = useState(null);
 
     const [companyName, setCompanyName] = useState('');
@@ -107,39 +101,17 @@ const DataEditCompany = () => {
             setCompanySiret(response.data.companySiret)
             setCompanySiren(response.data.companySiren)            
             setCompanyComment(response.data.companyComment)
-            handleGoogleMapLink()
-            getAllCompanyTypes()
             
         })
 
         
 
     }
-
-    const getAllCompanyTypes = () => {
-        TypeService.getAll()
-            .then( response=>{                
-                setTypesData(response.data['hydra:member'])
-            })
-    }
-
-    const listTypeFromDB = typesData.map(item => {
-        const container = {
-            value: null,
-            label: null
-        };
-    
-        container.value = item.typeSlug;
-        container.label = item.typeName;
-    
-        return container;
-    })
     
     useEffect(() => {
         if (companyId) {
             getCompanyData(companyId);
         }
-          
         
       }, [companyId]);   
 
@@ -194,34 +166,25 @@ const DataEditCompany = () => {
 
     }
 
-    const handleGoogleMapLink = () => {
-
-        const gLinkFirst = 'https://www.google.com/maps/place/'
-        // setUserAddress(e.target.value);
-        // const addressValue  = e.target.value;
-        const gLink = gLinkFirst+encodeURIComponent(companyAddress);        
-
-        // setUserDepartment(formatDepartment(addressValue))
-        
-        //setUserGMapLink(gLink)
-        setUserGMapLink(gLink)
-
-    }
-
     const handleDataCompanyType = (e) => {
 
         setCompanyType(e.value)
 
     }
 
-    const handleLinkPreview = (e) => {
-        const urlFiche = '/compagnies/fiche/' + companyId
+    const handleLinkEdit = (e) => {
+        const urlFiche = '/compagnies/edit/' + companyId
         navigate(urlFiche)
     }
 
     const handleLinkList = (e) => {
-        const urlList = '/compagnies'
-        navigate(urlList)
+        const urlFiche = '/compagnies'
+        navigate(urlFiche)
+    }
+
+    const handleLinkNew = (e) => {
+        const urlFiche = '/compagnies/create/'
+        navigate(urlFiche)
     }
 
     return (
@@ -237,9 +200,9 @@ const DataEditCompany = () => {
                         variant="contained"
                         aria-label="Disabled elevation buttons"
                     >
-                        <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button onClick={handleLinkEdit}>Editer</Button>
                         <Button onClick={handleLinkList}>Liste</Button>
-                        <Button type="submit">Enregistrer</Button>
+                        <Button onClick={handleLinkNew}>Nouveau</Button>
                     </ButtonGroup>
                 </div>
             </div>
@@ -260,141 +223,60 @@ const DataEditCompany = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Nom de l'entreprise <span className="text-meta-1">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    id="company-name"
-                                    onChange={(e) => setCompanyName(e.target.value)}
-                                    value={companyName}
-                                    placeholder="Nom de l'entreprise"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                    required
-                                />
+                                {companyName}
                             </div>
 
-                            <div className="mb-4.5 hidden">
+                            <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Slogan
                                 </label>
-                                <input
-                                    type="text"
-                                    id="company-slogan"
-                                    onChange={(e) => setCompanySlogan(e.target.value)}
-                                    value={companySlogan}
-                                    placeholder="Slogan"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                {companySlogan}
                             </div> 
 
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Type de structure <span className="text-meta-1">*</span>
-                                </label>               
-                                <Select 
-                                    options={listTypeFromDB}
-                                    onChange={handleDataCompanyType}
-                                    value = {
-                                        listTypeFromDB.filter(option => 
-                                           option.value === companyType )
-                                    }
-                                />                 
-                                {/* <Select 
-                                    options={dataCompanyType}
-                                    onChange={handleDataCompanyType}
-                                    value = {
-                                        dataCompanyType.filter(option => 
-                                           option.value === companyType )
-                                    }
-                                /> */}
+                                </label>          
+                                {companyType}                     
+                                
                             </div>
 
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Taille de l'entreprise
-                                </label>                                
-                                <Select 
-                                    options={companyDataSizeList}                                             
-                                    onChange={handleChangeCompanySize}
-                                    value = {
-                                            companyDataSizeList.filter(option => 
-                                               option.value === companySize )
-                                        }
-                                />
+                                </label>          
+                                {companySize}  
                             </div>                            
                                                                                       
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Adresse  <span className="text-meta-1">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    id="user-address"
-                                    onChange={(e) => setCompanyAddress(e.target.value)}
-                                    value={companyAddress}
-                                    placeholder="Adresse / CP / Ville"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                    required
-                                />
+                                {companyAddress}
                             </div>  
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Code postal
                                 </label>
-                                <input
-                                    type="text"
-                                    id="company-postal-code"
-                                    onChange={(e) => setCompanyPostalCode(e.target.value)}
-                                    value={companyPostalCode}
-                                    placeholder="Code postal"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                {companyPostalCode}
                             </div>  
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Département
                                 </label>
-                                <input
-                                    type="text"
-                                    id="user-department"
-                                    onChange={(e) => setCompanyDepartment(e.target.value)}
-                                    value={companyDepartment}
-                                    placeholder="Département"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                {companyDepartment}
                             </div>       
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Pays
                                 </label>
                                 
-                                <Select 
-                                    options={countriesDataList} 
-                                    onChange={handleChangeCompanyCountry} 
-                                    value = {
-                                        countriesDataList.filter(option => 
-                                           option.value === companyCountry )
-                                    }
-                                 />
-                                {/* <input
-                                    type="text"
-                                    id="company-country"
-                                    onChange={(e) => setCompanyCountry(e.target.value)}
-                                    value={companyCountry}
-                                    placeholder="Département"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                /> */}
+                                {companyCountry}
                             </div>
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Lien Google map <Link to={userGmapLink} target="_blank"><InsertLinkIcon /></Link>
                                 </label>
-                                {/* <input
-                                    type="text"
-                                    id="user-gmap-link"
-                                    onChange={(e) => setUserGMapLink(e.target.value)}
-                                    value={userGmapLink}
-                                    placeholder="Lien vers la fiche sur Google map"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                /> */}
                             </div>   
                         </div>                        
                     </div>
@@ -413,42 +295,21 @@ const DataEditCompany = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     RCS
                                 </label>
-                                <input
-                                    type="text"
-                                    id="company-rcs"
-                                    onChange={(e) => setCompanyRcs(e.target.value)}
-                                    value={companyRcs}
-                                    placeholder="RCS"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                {companyRcs}
                             </div> 
 
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Siren
                                 </label>
-                                <input
-                                    type="text"
-                                    id="company-siren"
-                                    onChange={(e) => setCompanySiren(e.target.value)}
-                                    value={companySiren}
-                                    placeholder="Siren"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                {companySiren}
                             </div> 
 
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Siret
                                 </label>
-                                <input
-                                    type="text"
-                                    id="company-siret"
-                                    onChange={(e) => setCompanySiret(e.target.value)}
-                                    value={companySiret}
-                                    placeholder="Siret"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                {companySiret}
                             </div> 
 
                             <div className="p-6.5">       
@@ -473,7 +334,7 @@ const DataEditCompany = () => {
                             </h3>
                         </div>
                         <div className="flex flex-col gap-5.5 p-6.5">      
-                            <ReactQuill theme="snow" value={companyComment} onChange={setCompanyComment} />
+                            {companyComment}
                         </div>
                     </div>    
 
@@ -501,4 +362,4 @@ const DataEditCompany = () => {
 
 }
 
-export default DataEditCompany
+export default DataFicheCompany

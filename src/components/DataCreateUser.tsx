@@ -16,7 +16,10 @@ import Checkbox from '@mui/material/Checkbox';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import FileUpload from "./FileUpload";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import { formatDepartment } from "../common/Utils";
+import CompanyService from "../services/CompanyServices";
 
 
 const userSkillsList = [ 
@@ -77,6 +80,8 @@ const DataCreateUser = () => {
 
     // set company types data to list
     const [typesData, setTypesData] = useState<any[]>([]);
+    const [skillsData, setSkillsData] = useState<any[]>([]);
+    const [compagniesData, setCompagniesData] = useState<any[]>([]);
 
 
     const handleUserSkills = ( 
@@ -93,7 +98,6 @@ const DataCreateUser = () => {
         
     }
 
-   
 
     const handleCreateUserData = async (e) => {
 
@@ -164,9 +168,9 @@ const DataCreateUser = () => {
     const handleGoogleMapLink = (e) => {
 
         const gLinkFirst = 'https://www.google.com/maps/place/'
-        setUserAddress(e.target.value);
-        const addressValue  = e.target.value;
-        const gLink = gLinkFirst+encodeURIComponent(addressValue);        
+        setUserAddress(e.target.value)
+        const addressValue  = e.target.value
+        const gLink = gLinkFirst+encodeURIComponent(addressValue)   
 
         setUserDepartment(formatDepartment(addressValue))
         
@@ -198,13 +202,27 @@ const DataCreateUser = () => {
     const getAllCompanyTypes = () => {
         TypeService.getAll()
             .then( response=>{
-                console.log(response.data['hydra:member'])
-                //setTypesData(response.data['hydra:member'])
+                // console.log(response.data['hydra:member'])
+                setCompagniesData(response.data['hydra:member'])
             })
     }
 
+    const getAllCompangnies = () => {
+        CompanyService.getAll()
+            .then( response=>{
+                // console.log(response.data['hydra:member'])
+                setCompagniesData(response.data['hydra:member'])
+            })
+    }
+
+    //todo
+    const getAllSkills = () => {
+
+    }
+
     useEffect(() => {
-        getAllCompanyTypes()        
+        getAllCompanyTypes()      
+        getAllCompangnies()  
     }, []);
 
     const listTypeFromDB = typesData.map(item => {
@@ -212,11 +230,21 @@ const DataCreateUser = () => {
             value: null,
             label: null
         };
-
-
     
         container.value = item.id;
         container.label = item.typeName;
+    
+        return container;
+    })
+
+    const listCompagniesFromDB = compagniesData.map(item => {
+        const container = {
+            value: null,
+            label: null
+        };
+    
+        container.value = item.companyType;
+        container.label = item.companyName;
     
         return container;
     })
@@ -439,14 +467,14 @@ const DataCreateUser = () => {
                                     <Select 
                                             options={listTypeFromDB}
                                         />
-                                    <Select                                        
+                                    {/* <Select                                        
                                         options={dataUserType}
                                         value = {
                                             dataUserType.filter(option => 
                                                option.value === companyType )
                                          }
                                         onChange={handleCompanyType}
-                                    /> 
+                                    />  */}
                                 </div>
                             </div>     
 
@@ -454,14 +482,22 @@ const DataCreateUser = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Nom de l'entreprise
                                 </label>
-                                <input
+                                <Autocomplete
+                                    disablePortal
+                                    id="company-list"
+                                    options={listCompagniesFromDB}
+                                    sx={{ width: "100%" }}
+                                    renderInput={(params) => <TextField {...params} label="Entreprise" />}
+                                    />
+                                <Link to="/compagnies/create">Nouvelle entreprise</Link>
+                                {/* <input
                                     type="text"
                                     id="company-name"
                                     onChange={(e) => setCompanyName(e.target.value)}
                                     value={companyName}
                                     placeholder="Nom entreprise"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                /> */}
                             </div>
 
                             <div>

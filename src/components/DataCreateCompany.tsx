@@ -7,8 +7,13 @@ import SwitcherQuailopi from './SwitcherQuailopi';
 import SwitcherTVA from './SwitcherTVA';
 import axios from '../api/axios';
 import CompanyDataService from "../services/CompanyServices";
+import TypeService from "../services/TypeServices";
 import DocumentManager from "./Documents/DocumentManager";
 import DocumentList from "./Documents/DocumentList";
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import { formatDepartment } from "../common/Utils";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -62,6 +67,30 @@ const DataCreateCompany = () => {
         setCompanySize(e.value)
     }
 
+    const [typesData, setTypesData] = useState<any[]>([]);
+
+    const getAllCompanyTypes = () => {
+        TypeService.getAll()
+            .then( response=>{                
+                setTypesData(response.data['hydra:member'])
+            })
+    }
+
+    const listTypeFromDB = typesData.map(item => {
+        const container = {
+            value: null,
+            label: null
+        };
+    
+        container.value = item.id;
+        container.label = item.typeName;
+    
+        return container;
+    })
+
+    useEffect(() => {
+        getAllCompanyTypes()        
+    }, []);
    
 
     const handleCreateCompanyData = async (e) => {
@@ -117,12 +146,39 @@ const DataCreateCompany = () => {
 
     }
 
+    const handleGoogleMapLink = (e) => {
+
+        const gLinkFirst = 'https://www.google.com/maps/place/'
+        setCompanyAddress(e.target.value);
+        const addressValue  = e.target.value;
+        const gLink = gLinkFirst+encodeURIComponent(addressValue);        
+
+        setCompanyDepartment(formatDepartment(addressValue))
+        
+        //setUserGMapLink(gLink)
+        setUserGMapLink(gLink)
+
+    }
+
+    const formatUserDepartment = (input) => {
+
+        const dept = formatDepartment(input) 
+        setCompanyDepartment(dept)
+
+    }
+
     const countriesDataList = useMemo( () => countryList().getData(), [])
 
     const handleChangeCompanyCountry = (e) => {        
 
         setCompanyCountry( e.value )        
     }
+
+    const handleLinkList = (e) => {
+        const urlFiche = '/compagnies'
+        navigate(urlFiche)
+    }
+
 
     return (
 
@@ -131,7 +187,14 @@ const DataCreateCompany = () => {
             <div className="flex justify-between">
                 <div className="flex"></div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkList}>Liste</Button>
+                        <Button type="submit">Enregistrer</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
@@ -162,7 +225,7 @@ const DataCreateCompany = () => {
                                 />
                             </div>
 
-                            <div className="mb-4.5">
+                            <div className="mb-4.5 hidden">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Slogan
                                 </label>
@@ -182,13 +245,16 @@ const DataCreateCompany = () => {
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
                                     <Select 
+                                            options={listTypeFromDB}
+                                        />
+                                    {/* <Select 
                                         options={dataCompanyType}
                                         onChange={handleDataCompanyType}
                                         value = {
                                             dataCompanyType.filter(option => 
                                             option.value === companyType )
                                         }
-                                    />
+                                    /> */}
                                 </div>
                             </div>
 
@@ -196,7 +262,7 @@ const DataCreateCompany = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Taille de l'entreprise
                                 </label>
-                                <div className="relative z-20 bg-transparent dark:bg-form-input">
+                                <div className="z-20 bg-transparent dark:bg-form-input">
                                     <Select 
                                         options={companyDataSizeList}                                             
                                         onChange={handleChangeCompanySize}
@@ -215,14 +281,14 @@ const DataCreateCompany = () => {
                                 <input
                                     type="text"
                                     id="user-address"
-                                    onChange={(e) => setCompanyAddress(e.target.value)}
-                                    value={companyAddress}
+                                    onChange={(e) => { setCompanyAddress(e.target.value); formatUserDepartment(e.target.value); handleGoogleMapLink() }}
+                                    value={companyAddress}                                    
                                     placeholder="Adresse / CP / Ville"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                     required
                                 />
                             </div>  
-                            <div className="mb-4.5">
+                            <div className="mb-4.5 hidden">
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Code postal
                                 </label>
@@ -261,16 +327,16 @@ const DataCreateCompany = () => {
                             </div>                                  
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google map
+                                    Lien Google map <Link to={userGmapLink} target="_blank"><InsertLinkIcon /></Link>
                                 </label>
-                                <input
+                                {/* <input
                                     type="text"
                                     id="user-gmap-link"
                                     onChange={(e) => setUserGMapLink(e.target.value)}
                                     value={userGmapLink}
                                     placeholder="Lien vers la fiche sur Google map"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                /> */}
                             </div>   
                         </div>                        
                     </div>

@@ -7,6 +7,7 @@ import SwitcherQuailopi from './SwitcherQuailopi';
 import SwitcherTVA from './SwitcherTVA';
 //import axios from '../api/axios';
 import UserService from '../services/UserServices';
+import TypeService from "../services/TypeServices";
 import DocumentManager from "./Documents/DocumentManager";
 import DocumentList from "./Documents/DocumentList";
 import DocumentServices from "../services/DocumentServices";
@@ -96,6 +97,9 @@ const DataEditUser = () => {
         { value: "sketch", label: "Sketch" },
         { value: "zoho", label: "Zoho" },
     ]
+
+    const [typesData, setTypesData] = useState<any[]>([]);
+
     //todo
     const getUserTypeDefaultValue = () => {
     
@@ -136,15 +140,37 @@ const DataEditUser = () => {
         
 
     }
+
+    const getAllCompanyTypes = () => {
+        TypeService.getAll()
+            .then( response=>{
+                // console.log(response.data['hydra:member'])
+                setTypesData(response.data['hydra:member'])
+            })
+    }
     
     useEffect(() => {
 
         if (userId) {
             getUserData(userId);
         }  
+
+        getAllCompanyTypes()  
         
 
     }, [userId]);
+
+    const listTypeFromDB = typesData.map(item => {
+        const container = {
+            value: null,
+            label: null
+        };
+    
+        container.value = item.id;
+        container.label = item.typeName;
+    
+        return container;
+    })
 
 
 
@@ -247,7 +273,7 @@ const DataEditUser = () => {
 
     const formatUserDepartment = (input) => {
 
-       const dept = formatDepartment(input) 
+        const dept = formatDepartment(input) 
         setUserDepartment(dept)
 
     }
@@ -483,14 +509,22 @@ const DataEditUser = () => {
                                     Type de structure <span className="text-meta-1">*</span>
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
-                                    <Select                                        
+                                    <Select 
+                                            options={listTypeFromDB}
+                                            value = {
+                                                dataUserType.filter(option => 
+                                                   option.value === companyType )
+                                             }
+                                            onChange={handleCompanyType}
+                                        />
+                                    {/* <Select                                        
                                         options={dataUserType}
                                         value = {
                                             dataUserType.filter(option => 
                                                option.value === companyType )
                                          }
                                         onChange={handleCompanyType}
-                                    />                                   
+                                    />                                    */}
                                 </div>
                             </div>     
 

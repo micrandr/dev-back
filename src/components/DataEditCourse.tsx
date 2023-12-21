@@ -51,6 +51,7 @@ const DataEditCourse = () => {
         courseName: "",
         courseCategory: "",
         courseDuration: "",
+        courseDurationHour: "",
         courseAddress: "",
         courseComment: "",
       };
@@ -348,7 +349,7 @@ const DataEditCourse = () => {
                     <div className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Détails du programme de formation
+                                Prix & Détails de formation
                             </h3>
                         </div>
                         <div className="p-6.5">
@@ -398,7 +399,7 @@ const DataEditCourse = () => {
                                 </div> 
                                 <div className="w-full xl:w-1/2">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                        Durée en heures
+                                        Durée en heures {courseDurationHour}
                                     </label>
                                     <input
                                         type="number"
