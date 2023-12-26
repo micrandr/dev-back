@@ -16,12 +16,13 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+
+    setTimeout(() => setLoading(false), 1000);    
     
     const isAuthenticated = !!Cookies.get('auth');
-    // if(!isAuthenticated){
-    //   navigate('/auth/signin')
-    // }
+    if(!isAuthenticated){
+      navigate('/auth/signin')
+    }
 
   }, []);
 

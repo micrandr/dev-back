@@ -33,7 +33,7 @@ const SignIn = () => {
     e.preventDefault();
     const isAuthenticated = authenticateUser(userEmail, userPasswd);
     if (isAuthenticated) {
-      toast.error('Problème de connexion')
+      // toast.error('Problème de connexion')
       navigate('/');
       window.location.reload();
     } else {
