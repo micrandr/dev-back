@@ -201,7 +201,7 @@ const DataCreateUser = () => {
     }
 
     const handleCompanyType = (e) => {
-        setCompanyType( e.value )
+        setCompanyType( e.label )
     }
 
     const getAllCompanyTypes = () => {
@@ -248,7 +248,8 @@ const DataCreateUser = () => {
             label: null
         };
     
-        container.value = item.companyType;
+        // container.value = item.companyType;
+        container.value = item.id;
         container.label = item.companyName;
     
         return container;
@@ -258,8 +259,8 @@ const DataCreateUser = () => {
         navigate("/users")
     }
 
-    const handleCompanyNameAutocomplete = () => {
-
+    const handleCompanyNameAutocomplete = (e) => {
+        setCompanyName(e.label)
     }
 
     return (
@@ -472,7 +473,7 @@ const DataCreateUser = () => {
 
                 <div className="flex flex-col gap-9">
 
-                    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                    <div className="hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
                                 Informations sur l'entreprise
@@ -486,7 +487,7 @@ const DataCreateUser = () => {
                                     Type de structure <span className="text-meta-1">*</span>
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
-                                    <ListUserType params={0} currentType={0} />
+                                    <ListUserType params={11} currentType={1}  actionType="create" onChange={handleCompanyType} />
                                     {/* <Select 
                                             options={listTypeFromDB}
                                         /> */}
@@ -505,12 +506,18 @@ const DataCreateUser = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Nom de l'entreprise
                                 </label>
-                                <Autocomplete                                    
+
+                                {/* <Autocomplete                                    
                                     id="company-list"
                                     options={listCompagniesFromDB}                                   
                                     getOptionLabel={(option) => option.label}
                                     sx={{ width: "100%" }}                                    
                                     renderInput={ (params) => <TextField {...params} label="Entreprise" />}
+                                    /> */}
+                                <Select                                    
+                                    id="company-list"
+                                    options={listCompagniesFromDB}  
+                                    onChange={handleCompanyNameAutocomplete}                                                                                                         
                                     />
                                     
                                     <CreateCompanyLinkAction />                               
@@ -616,7 +623,7 @@ const DataCreateUser = () => {
                         </div>                   
                     </div>      
                     
-                    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-5 px-0">
+                    <div className="hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-5 px-0">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
                                 Gestion de documents

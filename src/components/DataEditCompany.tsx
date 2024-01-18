@@ -18,12 +18,14 @@ import Editor from "./Fields/Editor";
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import {formatGMapLink, formatDepartment} from '../common/Utils'
+import FileUploaderFiles from "./Files/FileUploaderFiles";
 
 const DataEditCompany = () => {
 
     const navigate = useNavigate();
     const params = useParams();
     const companyId = params.id;
+    const userId = companyId
 
     const companyDataSizeList = [ 
         { value: "1", label: "1 employé" }, 
@@ -457,10 +459,34 @@ const DataEditCompany = () => {
                                 Gestion de documents
                             </h3>
                         </div>
+                        <div className="flex flex-col gap-5.5 p-6.5 border border-stroke rounded mt-5 mx-5">
 
+                           
+                            <div className="border border-stroke p-2">
+                            KBis <FileUploaderFiles dataUser={userId} fname="KBis" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                            URSSAF <FileUploaderFiles dataUser={userId} fname="Urssaf" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                            CV <FileUploaderFiles dataUser={userId} fname="CV" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                            Assurance décennale <FileUploaderFiles dataUser={userId} fname="ASSURANCE_DECENNALE" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                            Attestation fiscale  <FileUploaderFiles dataUser={userId} fname="ATTESTATION_FISCALE" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                            Attestion sur l'honneur <FileUploaderFiles dataUser={userId} fname="ATTESTATION_HONNEUR" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                            Autre <FileUploaderFiles dataUser={userId} fname="AUTRE" />
+                            </div>
+                            </div>
                         <div className="flex flex-col gap-5.5 p-6.5">
-                            <DocumentManager />
-                            <DocumentList />
+                            {/* <DocumentManager />
+                            <DocumentList /> */}
                         </div>
                        
                     </div>             

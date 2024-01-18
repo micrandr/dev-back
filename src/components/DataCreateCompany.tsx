@@ -16,6 +16,8 @@ import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import { formatDepartment } from "../common/Utils";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Editor from "./Fields/Editor";
+import FileUploaderFiles from "./Files/FileUploaderFiles";
 
 const REGISTER_URL = '/compagnies';
 
@@ -501,7 +503,8 @@ const DataCreateCompany = () => {
                         </div>
                         <div className="flex flex-col gap-5.5 p-6.5">                                                
                             
-                            <ReactQuill theme="snow" value={companyComment} onChange={setCompanyComment} />
+                            {/* <ReactQuill theme="snow" value={companyComment} onChange={setCompanyComment} /> */}
+                            <Editor value={companyComment} onChange={setCompanyComment} />
 
 
                         </div>
@@ -510,15 +513,16 @@ const DataCreateCompany = () => {
                             
                         </div>
                     </div>  
-                    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                    <div className="hidden  rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                                 <h3 className="font-medium text-black dark:text-white">
                                     Gestion de documents
                                 </h3>
                             </div>
+                            
                             <div className="flex flex-col gap-5.5 p-6.5">  
-                                <DocumentManager />
-                                <DocumentList />            
+                                {/* <DocumentManager />
+                                <DocumentList />             */}
                             </div>
                     </div>
 

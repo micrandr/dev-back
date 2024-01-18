@@ -179,55 +179,13 @@ const DataFicheRoom = () => {
                 .then( (response)=>{
 
                     toast.success("Mise à jour bien effectuée")
-                    navigate('/rooms')
-                    
+                    // navigate('/rooms')                    
                     
                 })
                 .then((error)=>{
                     console.log("Erreur lors de la maj " + error)
                 })
-            // const response = await axios.post(
-            //     REGISTER_URL,
-            //     JSON.stringify({
-            //             roomLabel,
-            //             roomMaxPlace,
-            //             roomAddress,
-            //             roomDepartment,
-            //             roomCoordinateLongitude,
-            //             roomCoordinateLattitude,
-            //             roomGmapLink,
-            //             roomEquipments,
-            //             roomPriceHT,
-            //             roomTvaRate,
-            //             roomDailyPrice,
-            //             roomHalfDayPrice,
-            //             roomHours,
-            //             roomComment,
-            //             roomHandicap,
-            //             roomContactFullname,
-            //             roomContactOccupation,
-            //             roomContactPhone,
-            //             roomContactDirectLine,
-            //             roomContactEmail,
-            //             roomCommentAccess,
-            //             roomCarAccess,
-            //             roomCommonTransport,
-            //             roomCommonTransportComment,
-            //             roomTrainAccess,
-            //             roomTrainAccessComment,
-            //             roomDrinkDistributor,
-            //             roomDrinkDistributorComment,
-            //             roomRestoDistributor,
-            //             roomRestoDistributorComment
-            //         }),
-            //         {
-            //             headers: { 'Content-Type': 'application/json' },
-            //             withCredentials: false
-            //         }
-            //     );
-
-            // console.log(response?.data);
-            // toast.error("Problème lors de la création. Contactez l'administrateur.");
+           
         }
         catch(err){ 
 
@@ -259,6 +217,11 @@ const DataFicheRoom = () => {
         navigate(linkEdit)
     }
 
+    const handleLinkList = () => {
+        const linkList = '/rooms'
+        navigate(linkList)
+    }
+
     const handleLinkNew = () => {
         const linkNew = '/rooms/create/'
         navigate(linkNew)
@@ -280,7 +243,8 @@ const DataFicheRoom = () => {
                         variant="contained"
                         aria-label="Disabled elevation buttons"
                     >
-                        <Button onClick={handleLinkEdit}>Modifier</Button>
+                        <Button onClick={handleLinkEdit}>Editer</Button>
+                        <Button onClick={handleLinkList}>Liste des salles de formation</Button>
                         <Button onClick={handleLinkNew}>Nouveau</Button>
                     </ButtonGroup>
                 </div>
@@ -430,9 +394,9 @@ const DataFicheRoom = () => {
                         </div>     
                         <div className="mb-4.5 px-5 mt-5">
                             <h3 className="mb-2.5 block text-black dark:text-white">
-                                Commentaire (contact) {roomContactComment}
+                                Commentaire (contact)
                             </h3>
-                            {parse(roomContactComment)}
+                            {roomContactComment}
                             
                         </div>   
                                         

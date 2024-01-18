@@ -11,7 +11,8 @@ const ListUserType = (params) => {
 
     useEffect(() => { 
         getAllCompanyTypes()      
-        setCompanyType(params.currentType)        
+        console.log(listTypeFromDB)        
+        // setCompanyType(params.currentType)
     }, []);
 
 
@@ -34,17 +35,20 @@ const ListUserType = (params) => {
         return container;
     })
 
-    const handleCompanyType = (e) => {
-        setCompanyType( e.label )
+ 
+    const handleChangeCompanyType = (e) => {
+       setCompanyType(e.value)
     }
 
     return (
-        <>                
-            ct: {companyType}
+        <> 
             <Select 
                 options={listTypeFromDB}                             
                 onChange={params.onChange}                  
-                value={listTypeFromDB.filter( option => option.label == params.currentType )}             
+                value={
+                        listTypeFromDB.filter( option =>                   
+                        option.label == params.currentType                     
+                )}             
             /> 
         </>
     )
