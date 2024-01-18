@@ -4,6 +4,7 @@ import TypeDataService from '../services/TypeServices';
 import TableDataList from './Lists/TableDataList';
 import LinkAction from './Buttons/LinkActions'
 import SkillService from '../services/SkillServices';
+import parse from 'html-react-parser'
 
 type Skills = {
   skillName: "",  
@@ -38,6 +39,17 @@ const DataListUserSkills = () => {
       {
         accessorKey: 'skillName',
         header: 'Libellé',
+      },
+      {
+        accessorKey: 'skillSlug',
+        header: 'Slug'
+      },
+      {
+        accessorKey: 'skillDescription',
+        header: 'Description',
+        accessorFn: (row)=>{
+          return (parse(row.skillDescription))
+        }
       },
       {
         id: "actionColumnCourse",

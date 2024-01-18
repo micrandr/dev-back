@@ -31,6 +31,7 @@ const CreateCompany = lazy(() => import('../pages/Users/CreateCompany'));
 const EditCompany = lazy(() => import('../pages/Users/EditCompany'));
 const FicheCompany = lazy(() => import('../pages/Users/FicheCompany'));
 const CreateUserSkills = lazy(() => import('../pages/Users/CreateUserSkills'));
+const EditUserSkills = lazy(() => import('../pages/Users/EditUserSkills'));
 const ListUserSkills = lazy(() => import('../pages/Users/ListUserSkills'));
 const ViewUserSkill = lazy(() => import('../pages/Users/ViewUserSkill'));
 const ListCourses = lazy(() => import('../pages/Courses/ListCourses'));
@@ -45,6 +46,8 @@ const TypeCourses = lazy(() => import('../pages/Courses/TypeCourses'));
 const TypeCreateCourse = lazy(() => import('../pages/Courses/TypeCreateCourse'));
 const TypeEditCourse = lazy(() => import('../pages/Courses/TypeEditCourse'));
 const TypeFicheCourse = lazy(() => import('../pages/Courses/TypeFicheCourse'));
+const CustomMaterialReactTable = lazy(() => import('../pages/CustomMaterialReactTable'));
+
 
 //Level
 const LevelList = lazy(() => import('../pages/Courses/LevelList'));
@@ -219,6 +222,11 @@ const coreRoutes = [
     path: '/userskills/create',
     title: 'Fiche compétences',
     component: CreateUserSkills,
+  },
+  {
+    path: '/userskills/edit/:id',
+    title: 'Editer fiche compétences',
+    component: EditUserSkills,
   },  
   {
     path: '/userskills/fiche/:id',
@@ -344,6 +352,11 @@ const coreRoutes = [
     path: '/filemanager',
     title: 'Gestionnaire de fichiers',
     component: FileManager
+  },
+  {
+    path: '/material-react-table',
+    title: 'Test table React',
+    component: CustomMaterialReactTable
   },  
 
 ];

@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import toast from 'react-hot-toast';
-import SwitcherQuailopi from './SwitcherQuailopi';
-import SwitcherTVA from './SwitcherTVA';
+// import SwitcherQuailopi from './SwitcherQuailopi';
+// import SwitcherTVA from './SwitcherTVA';
 import Select, {InputActionMeta} from 'react-select'
 import countryList from 'react-select-country-list'
 import UserService from "../services/UserServices";
@@ -13,14 +13,19 @@ import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import ReactQuill from 'react-quill';
+// import 'react-quill/dist/quill.snow.css';
 import FileUpload from "./FileUpload";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { formatDepartment } from "../common/Utils";
 import CompanyService from "../services/CompanyServices";
-
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import CreateCompanyLinkAction from "./Buttons/CreateCompanyLinkAction";
+import UserFiles from "./Files/UserFiles";
+import ListUserType from "./Lists/ListUserType";
+import Editor from "./Fields/Editor";
 
 const userSkillsList = [ 
     { value: "adobe", label: "Adobe" },
@@ -249,18 +254,32 @@ const DataCreateUser = () => {
         return container;
     })
     
+    const handleLinkList = () => {
+        navigate("/users")
+    }
+
+    const handleCompanyNameAutocomplete = () => {
+
+    }
 
     return (
 
         <>
         <form action="#" onSubmit={handleCreateUserData}>
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-3">
                 <div className="flex"></div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    <ButtonGroup
+                            disableElevation
+                            variant="contained"
+                            aria-label="Disabled elevation buttons"
+                        >   
+                            <Button onClick={handleLinkList}>Liste formateurs</Button>
+                            <Button type="submit">Enregistrer</Button>
+                        </ButtonGroup>
                 </div>
             </div>
-            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
 
                 <div className="flex flex-col gap-9">
 
@@ -272,7 +291,9 @@ const DataCreateUser = () => {
                         </div>
                         
                         <div className="p-6.5">
-                            <FileUpload />
+
+                            {/* <FileUpload /> */}
+
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className="w-full xl:w-1/2">
                                     <label className="mb-2.5 block text-black dark:text-white">
@@ -440,7 +461,8 @@ const DataCreateUser = () => {
                                     </h3>
                                 </div>
                                 <div className="flex flex-col">
-                                    <ReactQuill theme="snow" value={comment} onChange={setComment} />
+                                    <Editor  dataValue={comment} callBack={setComment} />
+                                    {/* <ReactQuill theme="snow" value={comment} onChange={setComment} /> */}
                                 </div>
                             </div>
 
@@ -464,9 +486,10 @@ const DataCreateUser = () => {
                                     Type de structure <span className="text-meta-1">*</span>
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
-                                    <Select 
+                                    <ListUserType params={0} currentType={0} />
+                                    {/* <Select 
                                             options={listTypeFromDB}
-                                        />
+                                        /> */}
                                     {/* <Select                                        
                                         options={dataUserType}
                                         value = {
@@ -482,22 +505,15 @@ const DataCreateUser = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Nom de l'entreprise
                                 </label>
-                                <Autocomplete
-                                    disablePortal
+                                <Autocomplete                                    
                                     id="company-list"
-                                    options={listCompagniesFromDB}
-                                    sx={{ width: "100%" }}
-                                    renderInput={(params) => <TextField {...params} label="Entreprise" />}
+                                    options={listCompagniesFromDB}                                   
+                                    getOptionLabel={(option) => option.label}
+                                    sx={{ width: "100%" }}                                    
+                                    renderInput={ (params) => <TextField {...params} label="Entreprise" />}
                                     />
-                                <Link to="/compagnies/create">Nouvelle entreprise</Link>
-                                {/* <input
-                                    type="text"
-                                    id="company-name"
-                                    onChange={(e) => setCompanyName(e.target.value)}
-                                    value={companyName}
-                                    placeholder="Nom entreprise"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                /> */}
+                                    
+                                    <CreateCompanyLinkAction />                               
                             </div>
 
                             <div>
@@ -508,9 +524,7 @@ const DataCreateUser = () => {
                                 </div>
                             </div> 
 
-                            <DocumentManager />
-
-                            <DocumentList />
+                           
 
                         </div>
                         
@@ -562,7 +576,8 @@ const DataCreateUser = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">                                    
-                                    <ReactQuill theme="snow" value={rayonAction} onChange={handleRayonAction} />
+                                    <Editor  dataValue={rayonAction} callBack={handleRayonAction} />
+                                    {/* <ReactQuill theme="snow" value={rayonAction} onChange={handleRayonAction} /> */}
                                 </div>
                             </div>                                                                                   
                         </div>
@@ -599,7 +614,20 @@ const DataCreateUser = () => {
                                 </div>
                             </div>                                                                                                             
                         </div>                   
-                    </div>               
+                    </div>      
+                    
+                    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark py-5 px-0">
+                        <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+                            <h3 className="font-medium text-black dark:text-white">
+                                Gestion de documents
+                            </h3>
+                        </div>
+                        
+                        <div className="flex flex-col gap-5.5 p-6.5 border border-stroke rounded mt-5 mx-5">
+                            {/* <DocumentManager /> */}
+                            {/* <DocumentList />          */}
+                        </div>
+                    </div>
 
                 </div>
 

@@ -5,6 +5,7 @@ import TableDataList from './Lists/TableDataList';
 import LinkAction from './Buttons/LinkActions'
 import Company1 from '../images/company/company-01.jpg';
 
+
 type Level = {
   levelName: "",  
   levelSlug: "",

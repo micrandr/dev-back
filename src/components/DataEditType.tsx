@@ -8,6 +8,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import parse from 'html-react-parser'
 
 const typeStatusList =  [ 
     { value: "none", label: "Selectionner" }, 
@@ -69,7 +70,7 @@ const DataEditType = () => {
                 .then( (response) => {
                     if(response.status == 200 || response.status==201){
                         toast.success("Modification bien appliqué")
-                        navigate('/levels')
+                        navigate('/types')
                     }
                     
                 })
@@ -87,9 +88,18 @@ const DataEditType = () => {
 
     }
 
+    const handleTypeDescription = (e) => {
+        setTypeDescription(e.value)
+    }
+
     const handleLinkPreview = (e) => {
         const urlView = '/types/fiche/' + typeId
         navigate(urlView)
+    }
+
+    const handleLinkList = (e) => {
+        const urlList = '/types/'
+        navigate(urlList)
     }
 
     return (
@@ -105,6 +115,7 @@ const DataEditType = () => {
                         aria-label="Disabled elevation buttons"
                     >
                         <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button onClick={handleLinkList}>Liste des types d'entreprise</Button>
                         <Button type="submit">Enregistrer</Button>
                     </ButtonGroup>
                 </div>
@@ -117,7 +128,7 @@ const DataEditType = () => {
                     <div className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Informations sur le niveau
+                                Informations sur le type
                             </h3>
                         </div>
                         
@@ -177,7 +188,9 @@ const DataEditType = () => {
                             </h3>
                         </div>
                         <div className="p-6.5">                           
-                            <ReactQuill theme="snow" value={typeDescription} onChange={setTypeDescription} />                            
+                            <textarea name="typeDescription" onChange={handleTypeDescription}>
+                            {typeDescription}
+                            </textarea>
                         </div>
                     </div>
                     

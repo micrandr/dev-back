@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate  } from 'react-router-dom';
 import TypeDataService from '../services/TypeServices';
 import TableDataList from './Lists/TableDataList';
 import LinkAction from './Buttons/LinkActions'
+import parse from 'html-react-parser'
 
 type Types = {
   levelName: "",  
@@ -44,7 +45,10 @@ const DataTypeList = () => {
       },
       {
         accessorKey: 'typeDescription',
-        header: 'Description'
+        header: 'Description',
+        accessorFn: (row) => {
+          return (parse(row.typeDescription))
+        }
       },
       {
         id: "actionColumnCourse",

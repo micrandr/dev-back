@@ -1,11 +1,14 @@
 import { useRef, useState, useEffect } from "react";
-import { useParams, useNavigate  } from "react-router-dom";
+import { useParams, useNavigate, Link  } from "react-router-dom";
 import SwitcherQuailopi from './SwitcherQuailopi';
 import SwitcherTVA from './SwitcherTVA';
 import axios from '../api/axios';
 import UserService from '../services/UserServices';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
+import parse from 'html-react-parser'
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import { formatGMapLink } from "../common/Utils";
 
 const USER_GET_URL = '/users/';
 
@@ -141,6 +144,11 @@ const DataFicheUser = () => {
         navigate( newLink )
     }
 
+    const handleLinkList = () => {
+        const listLink = '/users'
+        navigate( listLink )
+    }
+
     return (
 
         <>
@@ -155,11 +163,12 @@ const DataFicheUser = () => {
                         aria-label="Disabled elevation buttons"
                     >
                         <Button onClick={handleLinkEdit}>Modifier</Button>
+                        <Button onClick={handleLinkList}>Liste des Formateurs</Button>
                         <Button onClick={handleLinkNew}>Nouveau</Button>
                     </ButtonGroup>
                 </div>
             </div>
-            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
 
                 <div className="flex flex-col gap-9">
 
@@ -280,9 +289,9 @@ const DataFicheUser = () => {
                             </div>       
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google map
-                                </label>
-                                {userGmapLink}
+                                    Lien Google map <Link to={formatGMapLink(userAddress)} target="_blank"><InsertLinkIcon /></Link>
+                                </label>                                
+                                
                                 <input
                                     type="text"
                                     id="user-gmap-link"
@@ -294,7 +303,7 @@ const DataFicheUser = () => {
                             </div>  
                             {/* <!-- Toggle switch input --> */}
                             <div>
-                                <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+                                <div className="border-b border-stroke py-4  dark:border-strokedark">
                                     <h3 className="font-medium text-black dark:text-white">
                                         Certifié Qualiopi :  {certifiedQualiopi ? "Oui": "Non"}
                                     </h3>
@@ -322,7 +331,7 @@ const DataFicheUser = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Type de structure <span className="text-meta-1">*</span>
                                 </label>
-                                {companyType}s
+                                {companyType}
                             </div>     
 
                             <div className="mb-4.5">
@@ -435,26 +444,13 @@ const DataFicheUser = () => {
                             </h3>
                         </div>
                         <div className="flex flex-col gap-5.5 p-6.5">       
-                            {comment}                                         
-                            <textarea
-                            onChange={(e) => setComment(e.target.value)}
-                            value={comment}
-                            rows={6}
-                            placeholder="Default textarea"
-                            className="w-full hidden rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                            ></textarea>
-
-                                <button className="flex w-full hidden justify-center rounded bg-primary p-3 font-medium text-gray">
-                                Enregistrer
-                            </button>
-
+                            {parse(comment)}
                         </div>
 
                         <div>
                             
                         </div>
-                    </div>              
-
+                    </div>
                 </div>
 
             </div>

@@ -6,6 +6,8 @@ import slugify from "slugify";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import SkillService from "../services/SkillServices";
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 
 const skillStatusList =  [ 
     { value: "none", label: "Selectionner" }, 
@@ -56,6 +58,16 @@ const DataViewSkill = () => {
 
     }
 
+    const handleLinkEdit = (e) => {
+        const urlFiche = '/userskills/edit/' + skillId
+        navigate(urlFiche)
+
+    }
+
+    const handleLinkList = (e) => {
+        navigate('/userskills')
+    }    
+
     return (
 
         <>
@@ -63,7 +75,16 @@ const DataViewSkill = () => {
             <div className="flex justify-between mb-3">
                 <div className="flex"></div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    {/* <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button> */}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkEdit}>Editer</Button>
+                        <Button onClick={handleLinkList}>Liste des compétences</Button>
+                        <Button type="submit">Enregistrer</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             

@@ -93,6 +93,11 @@ const DataEditLevel = () => {
         navigate(urlView)
     }
 
+    const handleLinkList = (e) => {
+        const urlList = '/levels'
+        navigate(urlList)
+    }    
+
     return (
 
         <>
@@ -106,6 +111,7 @@ const DataEditLevel = () => {
                         aria-label="Disabled elevation buttons"
                     >
                         <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button onClick={handleLinkList}>Liste niveau</Button>
                         <Button type="submit">Enregistrer</Button>
                     </ButtonGroup>
                 </div>

@@ -4,6 +4,7 @@ import TypeService from '../services/TypeServices';
 import Select from "react-select";
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
+import parse from 'html-react-parser'
 
 const levelStatusList =  [ 
     { value: "none", label: "Selectionner" }, 
@@ -56,6 +57,11 @@ const DataViewType = () => {
         navigate(urlEdit)
     }
 
+    const handleLinkList = (e) => {
+        const urlList = '/types'
+        navigate(urlList)
+    }    
+
     const handleLinkCreate = (e) => {
         const urlCreate = '/types/create/'
         navigate(urlCreate)
@@ -74,6 +80,7 @@ const DataViewType = () => {
                         aria-label="Disabled elevation buttons"
                     >
                         <Button onClick={handleLinkEdit}>Editer</Button>
+                        <Button onClick={handleLinkList}>Liste types d'entreprise</Button>
                         <Button onClick={handleLinkCreate}>Nouveau</Button>
                     </ButtonGroup>
                 </div>
@@ -121,11 +128,11 @@ const DataViewType = () => {
                     <div className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Description du niveau programme de formation
+                                Description du type d'entreprise
                             </h3>
                         </div>
                         <div className="p-6.5">                           
-                        {typeDescription}
+                        {parse(typeDescription)}
                         </div>
                     </div>
                     

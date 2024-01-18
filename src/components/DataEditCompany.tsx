@@ -4,23 +4,20 @@ import toast from 'react-hot-toast';
 import Select from 'react-select'
 // import ReactCountryFlagsSelect from "react-country-flags-select";
 import countryList from 'react-select-country-list'
-import SwitcherQuailopi from './SwitcherQuailopi';
+// import SwitcherQuailopi from './SwitcherQuailopi';
 import SwitcherTVA from './SwitcherTVA';
 import CompanyDataService from "../services/CompanyServices";
 import TypeService from "../services/TypeServices";
 import DocumentManager from "./Documents/DocumentManager";
 import DocumentList from "./Documents/DocumentList";
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
-import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css';
+import Editor from "./Fields/Editor";
+// import ReactQuill from "react-quill";
+// import 'react-quill/dist/quill.snow.css';
 // import ButtonActions from "./Buttons/ButtonActions";
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
-
-
-const REGISTER_URL = '/compagnies';
-
-
+import {formatGMapLink, formatDepartment} from '../common/Utils'
 
 const DataEditCompany = () => {
 
@@ -81,7 +78,7 @@ const DataEditCompany = () => {
     const [companyCountry, setCompanyCountry] = useState('');
     const [companyDepartment, setCompanyDepartment] = useState('');    
     const [companyContactEmail, setCompanyContactEmail] = useState('');
-    const [userGmapLink, setUserGMapLink] = useState('');    
+    const [userGmapLink, setUserGmapLink] = useState('');    
     const [companyTva, setCompanyTva] = useState('');
     const [companyRcs, setCompanyRcs] = useState('');
     const [companySiren, setCompanySiren] = useState('');
@@ -190,21 +187,13 @@ const DataEditCompany = () => {
             console.log(error);
         }
 
-        
 
     }
 
     const handleGoogleMapLink = () => {
-
-        const gLinkFirst = 'https://www.google.com/maps/place/'
-        // setUserAddress(e.target.value);
-        // const addressValue  = e.target.value;
-        const gLink = gLinkFirst+encodeURIComponent(companyAddress);        
-
-        // setUserDepartment(formatDepartment(addressValue))
         
-        //setUserGMapLink(gLink)
-        setUserGMapLink(gLink)
+        let addressGMap = formatGMapLink(companyAddress)               
+        setUserGmapLink(addressGMap)  
 
     }
 
@@ -243,7 +232,7 @@ const DataEditCompany = () => {
                     </ButtonGroup>
                 </div>
             </div>
-            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
 
                 <div className="flex flex-col gap-9">
 
@@ -374,27 +363,11 @@ const DataEditCompany = () => {
                                            option.value === companyCountry )
                                     }
                                  />
-                                {/* <input
-                                    type="text"
-                                    id="company-country"
-                                    onChange={(e) => setCompanyCountry(e.target.value)}
-                                    value={companyCountry}
-                                    placeholder="Département"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                /> */}
                             </div>
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google map <Link to={userGmapLink} target="_blank"><InsertLinkIcon /></Link>
+                                    Lien Google map <Link to={formatGMapLink(companyAddress)} target="_blank"><InsertLinkIcon /></Link>
                                 </label>
-                                {/* <input
-                                    type="text"
-                                    id="user-gmap-link"
-                                    onChange={(e) => setUserGMapLink(e.target.value)}
-                                    value={userGmapLink}
-                                    placeholder="Lien vers la fiche sur Google map"
-                                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                /> */}
                             </div>   
                         </div>                        
                     </div>
@@ -473,7 +446,8 @@ const DataEditCompany = () => {
                             </h3>
                         </div>
                         <div className="flex flex-col gap-5.5 p-6.5">      
-                            <ReactQuill theme="snow" value={companyComment} onChange={setCompanyComment} />
+                            <Editor dataValue={companyComment} callBack={setCompanyComment} />
+                            {/* <ReactQuill theme="snow" value={companyComment} onChange={setCompanyComment} /> */}
                         </div>
                     </div>    
 

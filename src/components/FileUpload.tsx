@@ -1,34 +1,49 @@
-import React from 'react'
+import React, {useState} from 'react'
 import axios from '../api/axios';
+import UserService from '../services/UserServices';
+import { select } from '@material-tailwind/react';
 
+const API_URI = 'https://localhost:8000/'
 
-const FileUpload = () => {
+const FileUpload = (params) => {
+
+    const [selectedFile, setSelectedFile] = useState('')
+    const [selectedUserID, setSelectedUserID] = useState('')
 
     const handleFileUpload = (event) => {
-
         
-        const file = event.target.files[0];
-        
+        const file = event.target.files[0];        
         const formData = new FormData();
-        formData.append("file", file);
         
+        formData.append("file", file); 
+
+        console.log(event)
+
         axios
-            .post("https://file-upload8.p.rapidapi.com/upload", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                "x-rapidapi-host": "file-upload8.p.rapidapi.com",
-                "x-rapidapi-key": '0ce5d06c8cmsh7180ce018cdf50bp1e9e5bjsn1939f2c1c798',
-            },
+            .post( API_URI + "uploader.php", formData, {
+                
             })
             .then((response) => {
                 // handle the response
-                console.log(response);
+                
+                setSelectedFile(response.data)
+                console.log("selectedFile=" + selectedFile)
+                UserService.update(params.userID, JSON.stringify({ userPhoto: selectedFile }))
+                .then((responseUpdate)=>{
+                    
+                })
             })
             .catch((error) => {
                 // handle errors
                 console.log(error);
             });
-        };
+        
+    };
+
+    // const handleSetFile = (e) => {
+    //     setSelectedFile(e.value)
+    // }
+
     
   return (
 
@@ -36,9 +51,9 @@ const FileUpload = () => {
     <div className="mb-4.5">   
         <h3 className="pb-2">Photo</h3>             
         <input
-            type="file"            
-            onChange={handleFileUpload}
+            type="file"  
             className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+            onChange={handleFileUpload}
         />
     </div>
   );

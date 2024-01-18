@@ -6,45 +6,46 @@ import Select from "react-select";
 import slugify from "slugify";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import SkillService from "../services/SkillServices";
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 
-const typeStatusList =  [ 
+const skillStatusList =  [ 
     { value: "none", label: "Selectionner" }, 
-    { value: "1", label: "Activé" }, 
-    { value: "0", label: "Desactivé" }
+    { value: 1, label: "Activé" }, 
+    { value: 0, label: "Desactivé" }
 ]
 
 
-const DataCreateType = () => {
+const DataEditUserSkills = () => {
 
     const navigate = useNavigate();
     const params = useParams();
-    const typeId = params.id;
+    const skillId = params.id;
 
-    const initialTypeDataState = {
+    const initialSkillDataState = {
         id: null,
-        typeName: "",
-        TypeCategory: "",
-        typeSlug: "",
+        skillName: "",        
+        skillSlug: "",
+        skillDescription: "",
         typeStatus: "",
       };
 
-    const [typeName, setTypeName] = useState('');
-    const [typeSlug, setTypeSlug] = useState('');
-    const [typeDescription, setTypeDescription] = useState('');    
-    const [typeStatus, setTypeStatus] = useState('');
+    const [skillName, setSkillName] = useState('');
+    const [skillSlug, setSkillSlug] = useState('');
+    const [skillDescription, setSkillDescription] = useState('');    
+    const [skillStatus, setSkillStatus] = useState(true);
 
 
-    const getTypeData = typeId => {
+    const getSkillData = skillId => {
         
-        TypeService.get(typeId)
+        SkillService.get(skillId)
         .then(  response => {            
               
-            setTypeName(response.data.courseName)
-            setTypeSlug(response.data.courseName)
-            setTypeDescription(response.data.courseName)
-            setTypeStatus(response.data.courseName)
+            setSkillName(response.data.courseName)
+            setSkillSlug(response.data.courseName)
+            setSkillDescription(response.data.courseName)
+            setSkillStatus(response.data.courseName)
             
         })
 
@@ -54,34 +55,32 @@ const DataCreateType = () => {
 
     useEffect(() => {
         
-        // if (courseId) {
-        //     getCourseData(courseId);            
-        // }
+        if (skillId) {
+            getSkillData(skillId);            
+        }
         
-      }, [typeId]);
+      }, [skillId]);
 
-    const handleTypeStatus = (e) => {        
-        setTypeStatus( e.value )
+    const handleSkillStatus = (e) => {        
+        setSkillStatus( e.value )
     } 
 
-    const handleCreateTypeData = async (e) => {
+    const handleEditSkillData = async (e) => {
 
         e.preventDefault();        
 
         try {            
 
             const typeCreateData = JSON.stringify({
-                typeName,
-                typeSlug,
-                typeDescription,
-                typeStatus
+                skillName,                
+                skillDescription                
             })
 
-            TypeService.create(typeCreateData)
+            SkillService.create(typeCreateData)
                 .then( (response) => {
                     if(response.status == 200 || response.status==201){
                         toast.success("Enregistrement bien appliqué")
-                        navigate('/types')
+                        navigate('/userskills')
                     }
                     
                 })
@@ -100,20 +99,20 @@ const DataCreateType = () => {
     }
 
     const handleLinkPreview = (e) => {
-        const urlFiche = '/types/fiche/' + skillId
+        const urlFiche = '/userskills/fiche/' + skillId
         navigate(urlFiche)
 
     }
 
     const handleLinkList = (e) => {
-        navigate('/types')
-    }      
+        navigate('/userskills')
+    }    
 
     return (
 
         <>
-        <form action="#" onSubmit={handleCreateTypeData}>
-            <div className="flex justify-between">
+        <form action="#" onSubmit={handleEditSkillData}>
+            <div className="flex justify-between mb-3">
                 <div className="flex"></div>
                 <div className="flex">
                     {/* <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button> */}
@@ -122,8 +121,8 @@ const DataCreateType = () => {
                         variant="contained"
                         aria-label="Disabled elevation buttons"
                     >
-                        
-                        <Button onClick={handleLinkList}>Liste type d'entreprise</Button>
+                        <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button onClick={handleLinkList}>Liste des compétences</Button>
                         <Button type="submit">Enregistrer</Button>
                     </ButtonGroup>
                 </div>
@@ -136,21 +135,21 @@ const DataCreateType = () => {
                     <div className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Informations sur le type d'entreprise
+                                Informations sur cette compétence
                             </h3>
                         </div>
                         
                         <div className="p-6.5">
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Libellé
+                                    Libellé de la compétence
                                 </label>
                                 <input
                                     type="text"
-                                    id="course-name"
-                                    onChange={(e) => { setTypeName(e.target.value); setTypeSlug( slugify(e.target.value.toLowerCase()) ) } }
-                                    value={typeName}
-                                    placeholder="Nom / Libellé du niveau"
+                                    id="skill-name"
+                                    onChange={(e) => { setSkillName(e.target.value); setSkillSlug( slugify(e.target.value.toLowerCase()) ) } }
+                                    value={skillName}
+                                    placeholder="Nom / Libellé"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
                             </div>
@@ -161,9 +160,9 @@ const DataCreateType = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    id="course-slug"
-                                    onChange={(e) => setTypeSlug(e.target.value) }
-                                    value={typeSlug}
+                                    id="skill-slug"
+                                    onChange={(e) => setSkillSlug(e.target.value) }
+                                    value={skillSlug}
                                     placeholder="Slug"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 />
@@ -173,12 +172,13 @@ const DataCreateType = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Status
                                 </label>
-                                <Select                                    
-                                    options={typeStatusList} 
-                                    onChange={handleTypeStatus}
+                                <Select   
+                                    name="skill-status"                                 
+                                    options={skillStatusList} 
+                                    onChange={handleSkillStatus}
                                     value = {
-                                        typeStatusList.filter(option => 
-                                           option.value === typeStatus )
+                                        skillStatusList.filter(option => 
+                                           option.value === skillStatus )
                                      }                                    
                                 />
                             </div>
@@ -192,11 +192,11 @@ const DataCreateType = () => {
                     <div className="rounded-sm border border-stroke shadow-default dark:border-strokedark dark:bg-boxdark">
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
-                                Description du niveau programme de formation
+                                Description de la compétence
                             </h3>
                         </div>
                         <div className="p-6.5">                           
-                            <ReactQuill theme="snow" value={typeDescription} onChange={setTypeDescription} />                            
+                            <ReactQuill theme="snow" value={skillDescription} onChange={setSkillDescription} />                            
                         </div>
                     </div>
                     
@@ -210,4 +210,4 @@ const DataCreateType = () => {
 
 }
 
-export default DataCreateType
+export default DataEditUserSkills

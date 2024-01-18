@@ -8,6 +8,7 @@ import Select from 'react-select'
 import toast from 'react-hot-toast';
 import UploadFileService from '../../services/UploadFileService';
 import IFile from "../../types/File";
+import UserFiles from '../Files/UserFiles';
 
 export interface SimpleDialogProps {
     open: boolean;
@@ -17,7 +18,7 @@ export interface SimpleDialogProps {
 
   const docTypeOptions = [
     { value: 'kbis', label: 'KBis' },    
-    { value: 'ursssaf', label: 'URSSSAF' },    
+    { value: 'ursssaf', label: 'URSSAF' },    
     { value: 'cv', label: 'CV' },
     { value: 'assurance-decennale', label: 'Assurance Décennale' },
     { value: 'attestation-fiscale-tva', label: 'Attestation fiscale TVA' },
@@ -37,24 +38,46 @@ const DocumentManager = () => {
     const handleClose = () => {
         setOpen(false)
     }
+
+    const handleClickAdd = () => {
+       return (
+        <>
+        <h1>Label</h1>
+        <input type="text" value="Test" />
+        </>
+       )
+    }
     return ( 
         <>
             <Box sx={{ '& > :not(style)': { m: 1 } }}>
-                <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
+            {/* handleClickOpen */}
+                <Fab color="primary" aria-label="add" onClick={handleClickAdd}>
                     <AddIcon />
                 </Fab>
             </Box>
 
-            <SimpleDialog
+            <div id="file-container"></div>
+           
+
+            {/* <SimpleDialog
                 selectedValue={selectedValue}
                 open={open}
                 onClose={handleClose}
-                />
+                /> */}
         </>
     )
 }
 export default DocumentManager
 
+function AddFile() {    
+
+    return (
+        <>
+            <input type="file" value="" />
+        </>
+    )
+
+}
 
 function SimpleDialog(props: SimpleDialogProps) {
 
@@ -69,10 +92,10 @@ function SimpleDialog(props: SimpleDialogProps) {
     const [fileInfos, setFileInfos] = useState<Array<IFile>>([]); 
 
     useEffect(() => {
-        UploadFileService.getFiles().then((response) => {
-          setFileInfos(response.data);
-          console.log( response.data['hydra:member'] )
-        });
+        // UploadFileService.getFiles().then((response) => {
+        //   setFileInfos(response.data);
+        //   console.log( response.data['hydra:member'] )
+        // });
       }, []);
 
   
@@ -97,33 +120,32 @@ function SimpleDialog(props: SimpleDialogProps) {
         e.preventDefault()
 
         setProgress(0);
-        if (!currentFile) return;
+        // if (!currentFile) return;
 
-        toast.error("Problème lors de la mise à jour. Contactez l'administrateur.");
     
-        UploadFileService.upload(currentFile, (event: any) => {
-          setProgress(Math.round((100 * event.loaded) / event.total));
-        })
-          .then((response) => {
-            setMessage(response.data.message);
-            return UploadFileService.getFiles();
-          })
-          .then((files) => {
-            setFileInfos(files.data);
-          })
-          .catch((err) => {
-            setProgress(0);
+        // UploadFileService.upload(currentFile, (event: any) => {
+        //   setProgress(Math.round((100 * event.loaded) / event.total));
+        // })
+        //   .then((response) => {
+        //     setMessage(response.data.message);
+        //     return UploadFileService.getFiles();
+        //   })
+        //   .then((files) => {
+        //     setFileInfos(files.data);
+        //   })
+        //   .catch((err) => {
+        //     setProgress(0);
     
-            if (err.response && err.response.data && err.response.data.message) {
-              setMessage(err.response.data.message);
-            } else {
-              setMessage("Could not upload the File!");
-            }
+        //     if (err.response && err.response.data && err.response.data.message) {
+        //       setMessage(err.response.data.message);
+        //     } else {
+        //       setMessage("Could not upload the File!");
+        //     }
     
-            setCurrentFile(undefined);
-          });
+        //     setCurrentFile(undefined);
+        //   });
 
-          toast.error("Problème de transfert de fichier.");
+        //   toast.error("Problème de transfert de fichier.");
 
     }
 
@@ -140,10 +162,14 @@ function SimpleDialog(props: SimpleDialogProps) {
         setProgress(0);
       };
 
+    const handleUserFile = () => {
+        console.log("test it!")
+    }
+
   
     return (
       <Dialog onClose={handleClose} open={open}>
-        <DialogTitle>Envoi de document</DialogTitle>
+        <DialogTitle>Envoi de document(s)</DialogTitle>
         <Box
             component="form"
             sx={{
@@ -153,27 +179,15 @@ function SimpleDialog(props: SimpleDialogProps) {
             autoComplete="off"
             className="p-5"
             >
-            
-            <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
-                    Nom du fichier
-                </label>
-                <input
-                    type="text"
-                    id="document-name"
-                    onChange={(e) => setDocName(e.target.value)}
-                    value={docName}
-                    placeholder="Nom du document"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                />
-            </div>
+            <Select options={docTypeOptions} 
+                value = {
+                    docTypeOptions.filter(option => 
+                    option.value === docType )
+                }
+                onChange={handleDocType}
+            />
             <div className="mb-4.5">                
-                <input
-                    type="file"
-                    id="document-file"
-                    onChange={selectFile}
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                />
+                <UserFiles onChange={handleUserFile} />
             </div>
             <div className="mb-4.5">
                 <label className="mb-2.5 block text-black dark:text-white">Date d'expiration</label>
@@ -187,13 +201,7 @@ function SimpleDialog(props: SimpleDialogProps) {
                 />
             </div>
 
-            <Select options={docTypeOptions} 
-                value = {
-                    docTypeOptions.filter(option => 
-                    option.value === docType )
-                }
-                onChange={handleDocType}
-            />
+            
 
             <div className="flex">
                 <button                     

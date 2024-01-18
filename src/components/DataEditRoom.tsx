@@ -11,8 +11,11 @@ import Checkbox from '@mui/material/Checkbox';
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import Editor from "./Fields/Editor";
+import { formatGMapLink } from "../common/Utils";
+//import ReactQuill from 'react-quill';
+//import 'react-quill/dist/quill.snow.css';
+
 
 // const REGISTER_URL = '/rooms';
 
@@ -218,6 +221,11 @@ const DataEditRoom = () => {
         navigate(linkPreview)
     }
 
+    const handleLinkList = () => {
+        const linkList = '/rooms'
+        navigate(linkList)
+    }
+
     const handleCarAccess = ( e ) => {
         if(e.target.checked){
             setOpenCar(true)
@@ -274,6 +282,7 @@ const DataEditRoom = () => {
                         aria-label="Disabled elevation buttons"
                     >
                         <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button onClick={handleLinkList}>Liste des salles</Button>
                         <Button type="submit">Enregistrer</Button>
                     </ButtonGroup>
                 </div>
@@ -395,7 +404,7 @@ const DataEditRoom = () => {
                             </div>                            
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google Map <Link to={roomGmapLink} target="_blank"><InsertLinkIcon /></Link>
+                                    Lien Google Map <Link to={formatGMapLink(roomAddress)} target="_blank"><InsertLinkIcon /></Link>
                                 </label>                               
                             </div>   
 
@@ -411,7 +420,8 @@ const DataEditRoom = () => {
                                 <h3 className="mb-2.5 block text-black dark:text-white">
                                     Commentaire (salle)
                                 </h3>
-                                <ReactQuill theme="snow" value={roomComment} onChange={setRoomComment} />
+                                {/* <ReactQuill theme="snow" value={roomComment} onChange={setRoomComment} /> */}
+                                <Editor data={roomComment} onChange={setRoomComment} />
                                 
                             </div>
                                                                         
@@ -490,8 +500,8 @@ const DataEditRoom = () => {
                             <h3 className="mb-2.5 block text-black dark:text-white">
                                 Commentaire (contact)
                             </h3>
-                            <ReactQuill theme="snow" value={roomContactComment} onChange={setRoomContactComment} />
-                            
+                            {/* <ReactQuill theme="snow" value={roomContactComment} onChange={setRoomContactComment} /> */}
+                            <Editor data={roomContactComment} onChange={setRoomContactComment} />
                         </div>   
                                         
                     </div>   
@@ -520,15 +530,15 @@ const DataEditRoom = () => {
                                     <FormControlLabel control={<Checkbox />} label="Paperboard" />
 
                                     <FormControlLabel control={<Checkbox checked={(openCar)?true:false} onChange={handleCarAccess} />} label="Accès voiture"  />
-                                    <ReactQuill theme="snow" value={carComment} className={`${openCar? "block": "hidden"} text-[20px]`} />
+                                    {/* <ReactQuill theme="snow" value={carComment} className={`${openCar? "block": "hidden"} text-[20px]`} /> */}
                                     <FormControlLabel control={<Checkbox checked={(openCommon)?true:false} onChange={handleCommonAccess} />} label="Accès transport en commun"  />
-                                    <ReactQuill theme="snow" value={commonComment} className={`${openCommon? "block": "hidden"} text-[20px]`} />
+                                    {/* <ReactQuill theme="snow" value={commonComment} className={`${openCommon? "block": "hidden"} text-[20px]`} /> */}
                                     <FormControlLabel control={<Checkbox checked={(openTrain)?true:false} onChange={handleTrainAccess} />} label="Accès train"  />
-                                    <ReactQuill theme="snow" value={trainComment} className={`${openTrain? "block": "hidden"} text-[20px]`} />
+                                    {/* <ReactQuill theme="snow" value={trainComment} className={`${openTrain? "block": "hidden"} text-[20px]`} /> */}
                                     <FormControlLabel control={<Checkbox checked={(openDrink)?true:false} onChange={handleDrinkAccess}  />} label="Distributeur de boisson"  />
-                                    <ReactQuill theme="snow" value={drinkComment} className={`${openDrink? "block": "hidden"} text-[20px]`} />
+                                    {/* <ReactQuill theme="snow" value={drinkComment} className={`${openDrink? "block": "hidden"} text-[20px]`} /> */}
                                     <FormControlLabel control={<Checkbox checked={(openRestore)?true:false} onChange={handleRestoreAccess} />} label="Distributeur de restauration"  />
-                                    <ReactQuill theme="snow" value={restoreComment} className={`${openRestore? "block": "hidden"} text-[20px]`} />
+                                    {/* <ReactQuill theme="snow" value={restoreComment} className={`${openRestore? "block": "hidden"} text-[20px]`} /> */}
                                 </FormGroup>                                                                            
                                 </div>
                             </div>
@@ -675,13 +685,13 @@ const DataEditRoom = () => {
                                     Distributeur de restauration
                                 </label>
                                 <SwitcherHandicap /> 
-                                <textarea
+                                {/* <textarea
                                     onChange={(e) => setRoomRestoDistributorComment(e.target.value)}
                                     value={roomRestoDistributorComment}
                                     rows={1}
                                     placeholder="Commentaire restauration"
                                     className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                    ></textarea>                                                                              
+                                    ></textarea>                                                                               */}
                             </div>
                         </div>
 

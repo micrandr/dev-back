@@ -85,6 +85,10 @@ const DataCategoryEditCourse = () => {
 
     }
 
+    const handleLinkList = (e) => {
+        navigate('/courses/categories')
+    }
+
     return (
 
         <>
@@ -94,12 +98,13 @@ const DataCategoryEditCourse = () => {
                    
                 </div>
                 <div className="flex">
-                <ButtonGroup
+                    <ButtonGroup
                         disableElevation
                         variant="contained"
                         aria-label="Disabled elevation buttons"
                     >
                         <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button onClick={handleLinkList}>Liste des catégories</Button>
                         <Button type="submit">Enregistrer</Button>
                     </ButtonGroup>
                 </div>
@@ -137,11 +142,11 @@ const DataCategoryEditCourse = () => {
                                     Description
                                 </h3>
                                 <textarea
-                                onChange={(e) => setCategoryDescription(e.target.value)}
-                                value={categoryDescription}
-                                rows={3}
-                                placeholder="Descriptif sur la catégorie de formation"
-                                className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    onChange={(e) => setCategoryDescription(e.target.value)}
+                                    value={categoryDescription}
+                                    rows={3}
+                                    placeholder="Descriptif sur la catégorie de formation"
+                                    className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                                 ></textarea>
                             </div>
 

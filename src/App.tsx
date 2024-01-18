@@ -20,9 +20,9 @@ function App() {
     setTimeout(() => setLoading(false), 1000);    
     
     const isAuthenticated = !!Cookies.get('auth');
-    if(!isAuthenticated){
-      navigate('/auth/signin')
-    }
+    // if(!isAuthenticated){
+    //   navigate('/auth/signin')
+    // }
 
   }, []);
 

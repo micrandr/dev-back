@@ -4,6 +4,8 @@ import { toast } from "react-hot-toast"
 import CourseService from "../services/CourseServices"
 import slugify from "slugify";
 import Select from 'react-select'
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
 
 const typeActiveList =  [ 
     { value: "none", label: "Selectionner" }, 
@@ -65,6 +67,16 @@ const DataTypeCreateCourse = () => {
         setCourseTypeStatus( e.value )
     }
 
+    const handleLinkPreview = (e) => {
+        const urlFiche = '/types/fiche/' + skillId
+        navigate(urlFiche)
+
+    }
+
+    const handleLinkList = (e) => {
+        navigate('/types')
+    }  
+
     return (
 
         <>
@@ -72,7 +84,16 @@ const DataTypeCreateCourse = () => {
             <div className="flex justify-between">
                 <div className="flex"></div>
                 <div className="flex">
-                    <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button>
+                    {/* <button className="flex w-100 mr-2 mb-2 justify-center rounded bg-primary p-3 font-medium text-gray">Enregistrer</button> */}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                    >
+                        <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button onClick={handleLinkList}>Liste des compétences</Button>
+                        <Button type="submit">Enregistrer</Button>
+                    </ButtonGroup>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">

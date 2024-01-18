@@ -3,37 +3,43 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import toast from 'react-hot-toast';
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
-import SwitcherQuailopi from './SwitcherQuailopi';
-import SwitcherTVA from './SwitcherTVA';
-//import axios from '../api/axios';
+// import SwitcherQuailopi from './SwitcherQuailopi';
+// import SwitcherTVA from './SwitcherTVA';
+import axios from '../api/axios';
 import UserService from '../services/UserServices';
 import TypeService from "../services/TypeServices";
+import CompanyService from "../services/CompanyServices";
 import DocumentManager from "./Documents/DocumentManager";
 import DocumentList from "./Documents/DocumentList";
-import DocumentServices from "../services/DocumentServices";
+// import DocumentServices from "../services/DocumentServices";
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import Checkbox from '@mui/material/Checkbox';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import FileUpload from "./FileUpload";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { formatDepartment } from "../common/Utils";
-
-
+import Editor from "./Fields/Editor";
+import { formatGMapLink, formatDepartment } from "../common/Utils";
+import CreateCompanyLinkAction from "./Buttons/CreateCompanyLinkAction";
+import ListUserType from "./Lists/ListUserType";
+import ListUserCompagnies from "./Lists/ListUserCompagnies";
+import FileUploaderFiles from "./Files/FileUploaderFiles";
+// import Users from "./Users";
 //import ListUserType from "./Lists/ListUserType";
 
 const USER_GET_URL = '/users/';
+//const API_URI = 'https://localhost:8000/'
+const API_URI = 'https://dev-api.formationbtp.fr/index.php/api/'
+
 
 const DataEditUser = () => {
 
     const navigate = useNavigate();
     const params = useParams();
-    const userId = params.id;
-
-    
+    const userId = params.id;    
 
     const initialUserDataState = {
         id: null,
@@ -57,6 +63,8 @@ const DataEditUser = () => {
     const [userCountry, setUserCountry] = useState('');
     const [userGmapLink, setUserGMapLink] = useState('');
     const [userSkills, setUserSkills] = useState('');
+    const [userPhoto, setUserPhoto] = useState('');
+    const [userPhotoLink, setUserPhotoLink] = useState('');
     const [certifiedQuailopi, setCertifiedQuailopi] = useState('');
     const [checkCertifiedQuailopi, setCheckCertifiedQuailopi] = useState(false)
     const [userComment, setUserComment] = useState('');
@@ -74,6 +82,8 @@ const DataEditUser = () => {
     const [docData, setDocData] = useState('');
     const [selectedSkillsValues, setSelectedSkillsValues] = useState([])
     //const { id } = useParams();    
+
+    const [compagniesData, setCompagniesData] = useState<any[]>([]);
 
     const countriesDataList = useMemo( () => countryList().getData(userCountry), [])
     const dataUserType =  [ 
@@ -122,6 +132,7 @@ const DataEditUser = () => {
             setUserDepartment(response.data.userDepartment)
             setCertifiedQuailopi(response.data.certifiedQuailopi)
             setUserSkills(response.data.userSkills)
+            setUserPhoto(response.data.userPhoto)
             setCompanyName(response.data.companyName)
             setUserCountry(response.data.userCountry)
             setCompanyType(response.data.companyType)
@@ -134,6 +145,7 @@ const DataEditUser = () => {
             setPricePresentielRayonAction(response.data.pricePresentielRayonAction)            
             setPriceTransport(response.data.priceTransport)
             setComment(response.data.comment)
+           
             
         })
 
@@ -153,9 +165,13 @@ const DataEditUser = () => {
 
         if (userId) {
             getUserData(userId);
+            if( userPhoto != ''){
+                setUserPhotoLink(API_URI + 'uploads/' + userPhoto)
+            }
         }  
 
         getAllCompanyTypes()  
+
         
 
     }, [userId]);
@@ -171,6 +187,34 @@ const DataEditUser = () => {
     
         return container;
     })
+
+    useEffect(() => {
+        getAllCompanyTypes()      
+        getAllCompangnies()          
+        
+        
+    }, []);
+
+    const listCompagniesFromDB = compagniesData.map(item => {
+        const container = {
+            value: null,
+            label: null
+        };
+    
+        container.value = item.companyType;
+        container.label = item.companyName;
+    
+        return container;
+    })
+
+
+    const getAllCompangnies = () => {
+        CompanyService.getAll()
+            .then( response=>{
+                // console.log(response.data['hydra:member'])
+                setCompagniesData(response.data['hydra:member'])
+            })
+    }
 
 
 
@@ -191,6 +235,7 @@ const DataEditUser = () => {
                 userDepartment,
                 userCountry,
                 userSkills,
+                // userPhoto,
                 companyName,
                 companyType,
                 companyTva,                
@@ -205,14 +250,18 @@ const DataEditUser = () => {
                 comment
             });
 
+            // //file upload
+            // handleFileUpload(e)
+
             UserService.update(userId, userData)
             .then( response => {
                 if(response.status == 200) {
-                    toast.success("Mise à jour bien effectué");
-                    // toast.error("Problème lors de la mise à jour. Contactez l'administrateur.");
-                    navigate('/users');
+                    toast.success("Mise à jour bien effectué");                    
+                    // navigate('/users');
                 }
-            });        
+            });    
+
+            
                
         }
         catch(error){      
@@ -228,7 +277,7 @@ const DataEditUser = () => {
     }
 
     const handleCompanyType = (e) => {
-        setCompanyType( e.value )
+        setCompanyType( e.label )
     }
 
     const handleUserSkills = (e) => {    
@@ -271,11 +320,118 @@ const DataEditUser = () => {
         navigate(urlFiche)
     }
 
+    const handleLinkList = (e) => {
+        const urlList = '/users'
+        navigate(urlList)
+    }
+
     const formatUserDepartment = (input) => {
 
         const dept = formatDepartment(input) 
         setUserDepartment(dept)
 
+    }
+
+    //files-ui
+    const [value, setValue] = React.useState(undefined);
+ 
+    const updateFiles = (incommingFiles) => {
+        console.log("incomming extFiles", incommingFiles);
+        setValue(incommingFiles[0]);
+    };
+    const removeFile = () => {
+        setValue(undefined);
+    };
+
+    const handleCompanyName = (e) => {
+        // console.log("COmpanyname==" + e)
+        setCompanyName(e.label)
+    }
+
+    const [selectedFile, setSelectedFile] = useState('')
+    const [selectedUserID, setSelectedUserID] = useState('')
+    const [file, setFile] = useState<File | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+          setFile(e.target.files[0]);
+        }
+    };
+
+    const handleFileUpload = async (event) => {       
+        console.log(event)
+        // const file = event.target.files[0];              
+        // const formData = new FormData();        
+        // formData.append("file", file); 
+        // console.log("formData=")
+        // console.log(formData)
+
+        // console.log(event)
+
+        // axios
+        //     .post( API_URI + "uploader.php", formData, {
+                
+        //     })
+        //     .then((response) => {
+        //         // handle the response                
+        //         setSelectedFile(response.data)
+        //         console.log("selectedFile=" + selectedFile)
+        //         UserService.update(userId, JSON.stringify({ userPhoto: selectedFile }))
+        //         .then((responseUpdate)=>{
+                    
+        //         })
+        //     })
+        //     .catch((error) => {
+        //         // handle errors
+        //         console.log(error);
+        //     });
+        
+    };    
+
+    const handleSetFileUpload = (e) => {
+        setSelectedFile(e.value)
+    }
+
+
+    async function handleCustomFileUpload(e){
+
+        const file_name = e.target.files[0]
+
+        const formData = new FormData()
+        formData.append('file', file_name)
+        setUserPhoto(file_name.name)        
+
+        try {
+            await axios.post( API_URI + 'uploader.php',  formData, {
+                headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+            }).then( (response)=>{
+                setUserPhoto(response.data)
+                const photoData = JSON.stringify({
+                            userPhoto
+                        })
+                UserService.update( userId, photoData)
+                .then( (response2)=> { 
+                    console.log(response2) 
+                })
+            })
+        }
+        catch(error){
+
+        }
+    }
+
+
+    const displayUserPhoto = () => {
+        const DEFAULT_PHOTO = API_URI + '/images/default.png'
+        if(userPhoto!=""){
+            return (
+                <img src={API_URI+'/uploads/'+userPhoto} className="w-15" alt="" />
+            )
+        }
+
+        return (<img src={DEFAULT_PHOTO} className="w-15" alt="" />)
     }
 
     return (
@@ -292,11 +448,12 @@ const DataEditUser = () => {
                         aria-label="Disabled elevation buttons"
                     >
                         <Button onClick={handleLinkPreview}>Visualiser</Button>
+                        <Button onClick={handleLinkList}>Liste formateurs</Button>
                         <Button type="submit">Enregistrer</Button>
                     </ButtonGroup>
                 </div>
             </div>
-            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
 
 
                 <div className="flex flex-col gap-9">
@@ -305,11 +462,29 @@ const DataEditUser = () => {
                         <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
                             <h3 className="font-medium text-black dark:text-white">
                                 Informations générales
+                                <div className="mb-4.5 float-end rounded border-[1.5px] border-stroke bg box-border">
+                                    {/* {userPhotoLink!="" && 
+                                    <img src={userPhotoLink} alt="" className="box-border h-15 w-15 rounded-full" />
+                                    } */}
+                                    {displayUserPhoto()}
+                                </div>
                             </h3>
                         </div>
                         
                         <div className="p-6.5">
-                            <FileUpload />
+                            <div className="mt-3 p-3">
+                                <input 
+                                    type="file" 
+                                    name="file" 
+                                    className="" 
+                                    onChange={handleCustomFileUpload} 
+                                    id="user-photo" 
+                                />
+                            </div>
+                           
+                            {/* <CustomUploader userId={userId} /> */}
+                            {/* <FileUploader dataUser={userId} dataService={UserService} /> */}
+
                             <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                 <div className="w-full xl:w-1/2">
                                     <label className="mb-2.5 block text-black dark:text-white">
@@ -405,7 +580,7 @@ const DataEditUser = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    id="userAddress"
+                                    id="userPostalCode"
                                     onChange={(e) => setUserPostalCode(e.target.value)}
                                     value={userPostalCode}
                                     placeholder="CP"
@@ -418,7 +593,7 @@ const DataEditUser = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    id="user-department"
+                                    id="userDepartment"
                                     onChange={(e) => setUserDepartment(e.target.value)}
                                     value={userDepartment}
                                     placeholder="Département"
@@ -440,7 +615,7 @@ const DataEditUser = () => {
                             </div>       
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google map <Link to={userGmapLink} target="_blank"><InsertLinkIcon /></Link>
+                                    Lien Google map <Link to={formatGMapLink(userAddress)} target="_blank"><InsertLinkIcon /></Link>
                                 </label>
                                 <input
                                     type="text"
@@ -486,7 +661,7 @@ const DataEditUser = () => {
                                     </h3>
                                 </div>
                                 <div className="flex flex-col">
-                                    <ReactQuill theme="snow" value={comment} onChange={setComment} />
+                                    <Editor  dataValue={comment} callBack={setComment} />                                    
                                 </div>
                             </div>
                         </div>                        
@@ -506,25 +681,10 @@ const DataEditUser = () => {
 
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Type de structure <span className="text-meta-1">*</span>
+                                    Type de structure <span className="text-meta-1">*</span> {companyType}
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
-                                    <Select 
-                                            options={listTypeFromDB}
-                                            value = {
-                                                dataUserType.filter(option => 
-                                                   option.value === companyType )
-                                             }
-                                            onChange={handleCompanyType}
-                                        />
-                                    {/* <Select                                        
-                                        options={dataUserType}
-                                        value = {
-                                            dataUserType.filter(option => 
-                                               option.value === companyType )
-                                         }
-                                        onChange={handleCompanyType}
-                                    />                                    */}
+                                    <ListUserType params={userId} currentType={companyType} onChange={handleCompanyType} />                                
                                 </div>
                             </div>     
 
@@ -532,14 +692,23 @@ const DataEditUser = () => {
                                 <label className="mb-2.5 block text-black dark:text-white">
                                     Nom de l'entreprise
                                 </label>
-                                <input
+                                {/* <input
                                     type="text"
                                     id="company-name"
                                     onChange={(e) => setCompanyName(e.target.value)}
                                     value={companyName}
                                     placeholder="Nom entreprise"
                                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                                />
+                                /> */}
+                                <ListUserCompagnies params={userId} currentCompany={companyName} onChange={handleCompanyName} />
+                                {/* <Autocomplete
+                                    disablePortal
+                                    id="company-list"
+                                    options={listCompagniesFromDB}
+                                    sx={{ width: "100%" }}
+                                    renderInput={(params) => <TextField {...params} label="Entreprise" onChange={handleCompanyName} />}
+                                    />                                 */}
+                                <CreateCompanyLinkAction />
                             </div>
 
                             <div>
@@ -549,10 +718,6 @@ const DataEditUser = () => {
                                     </FormGroup> 
                                 </div>
                             </div> 
-
-                            <DocumentManager />
-
-                            <DocumentList />
                                 
                         </div>
                         
@@ -577,9 +742,14 @@ const DataEditUser = () => {
                                 </div>
                                 <div className="md:w-2/3">
                                     <input 
+                                        type="text"
+                                        name="price-presentiel-daily"
                                         onChange={(e) => setPricePresentielDaily(e.target.value)}
                                         value={pricePresentielDaily}
-                                        placeholder="Tarif journalier" className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
+                                        placeholder="Tarif journalier" 
+                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
+                                        id="inline-full-name"                                         
+                                    />
                                 </div>
                             </div>
                             <div className="md:flex md:items-center mb-6">
@@ -590,10 +760,13 @@ const DataEditUser = () => {
                                 </div>
                                 <div className="md:w-2/3">
                                     <input 
+                                        type="text"
+                                        name="price-presentiel-halfname"
                                         onChange={(e) => setPricePresentielHalfDay(e.target.value)}
                                         value={pricePresentielHalfDay}
                                         placeholder="Tarif demi-journée" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
+                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
+                                        id="price-presentiel-halfday"                                          
                                     />
                                 </div>
                             </div> 
@@ -604,7 +777,8 @@ const DataEditUser = () => {
                                 </label>
                                 </div>
                                 <div className="md:w-2/3">    
-                                    <ReactQuill theme="snow" value={rayonAction} onChange={handleRayonAction} />
+                                    <Editor dataValue={rayonAction} callBack={handleRayonAction} />
+                                    {/* <ReactQuill theme="snow" value={rayonAction} onChange={handleRayonAction} /> */}
                                 </div>
                             </div>                                                                                   
                         </div>
@@ -619,10 +793,14 @@ const DataEditUser = () => {
                                 </div>
                                 <div className="md:w-2/3">
                                     <input 
+                                        type="text"
+                                        name="price-distantiel-daily"
                                         onChange={(e) => setPriceDistancielDaily(e.target.value)}
                                         value={priceDistancielDaily}
-                                        placeholder="Tarif journalier" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" 
+                                        placeholder="Tarif distanciel" 
+                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" 
+                                        id="price-distantiel-daily" 
+                                         
                                     />
                                 </div>
                             </div>
@@ -634,14 +812,60 @@ const DataEditUser = () => {
                                 </div>
                                 <div className="md:w-2/3">
                                     <input 
+                                        type="text" 
+                                        name="price-half-day"
+                                        id="price-half-day" 
                                         onChange={(e) => setPriceDistancielHalfDay(e.target.value)}
                                         value={priceDistancielHalfDay}
                                         placeholder="Tarif demi-journée" 
-                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-full-name" type="text" />
+                                        className="bg-gray-200 appearance-none border-[1.5px] border-stroke bg-transparent w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                    />
                                 </div>
                             </div>                                                                                                             
-                        </div>                   
-                    </div>                      
+                        </div> 
+
+                                            
+                    </div>    
+                                        
+
+                    <div className="rounded-sm border pb-5 border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                        <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
+                            <h3 className="font-medium text-black dark:text-white">
+                                Gestionnaire de fichiers
+                            </h3>
+                        </div>
+
+                        <div className="flex flex-col gap-5.5 p-6.5 border border-stroke rounded mt-5 mx-5">
+
+                            {/* <DocumentManager /> */}
+
+                            {/* <DocumentList />    */}
+                            <div className="border border-stroke p-2">
+                               KBis <FileUploaderFiles dataUser={userId} fname="KBis" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                              URSSAF <FileUploaderFiles dataUser={userId} fname="Urssaf" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                               CV <FileUploaderFiles dataUser={userId} fname="CV" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                               Assurance décennale <FileUploaderFiles dataUser={userId} fname="ASSURANCE_DECENNALE" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                              Attestation fiscale  <FileUploaderFiles dataUser={userId} fname="ATTESTATION_FISCALE" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                               Attestion sur l'honneur <FileUploaderFiles dataUser={userId} fname="ATTESTATION_HONNEUR" />
+                            </div>
+                            <div className="border border-stroke p-2">
+                               Autre <FileUploaderFiles dataUser={userId} fname="AUTRE" />
+                            </div>
+                        </div>
+                    </div>    
+
+
+                              
 
                 </div>
 

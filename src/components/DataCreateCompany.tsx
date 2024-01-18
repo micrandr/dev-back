@@ -184,7 +184,7 @@ const DataCreateCompany = () => {
 
         <>
         <form action="#" onSubmit={handleCreateCompanyData}>
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-3">
                 <div className="flex"></div>
                 <div className="flex">
                     <ButtonGroup

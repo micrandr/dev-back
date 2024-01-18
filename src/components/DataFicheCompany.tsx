@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect, useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import toast from 'react-hot-toast';
-import Select from 'react-select'
+// import Select from 'react-select'
 // import ReactCountryFlagsSelect from "react-country-flags-select";
 import countryList from 'react-select-country-list'
-import SwitcherQuailopi from './SwitcherQuailopi';
+// import SwitcherQuailopi from './SwitcherQuailopi';
 import SwitcherTVA from './SwitcherTVA';
 import CompanyDataService from "../services/CompanyServices";
 import DocumentManager from "./Documents/DocumentManager";
@@ -12,8 +12,10 @@ import DocumentList from "./Documents/DocumentList";
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
-import ReactQuill from "react-quill";
-import 'react-quill/dist/quill.snow.css';
+import parse from 'html-react-parser'
+import {formatGMapLink} from '../common/Utils'
+// import ReactQuill from "react-quill";
+// import 'react-quill/dist/quill.snow.css';
 // import ButtonActions from "./Buttons/ButtonActions";
 
 
@@ -75,7 +77,7 @@ const DataFicheCompany = () => {
     const [companyCountry, setCompanyCountry] = useState('');
     const [companyDepartment, setCompanyDepartment] = useState('');    
     const [companyContactEmail, setCompanyContactEmail] = useState('');
-    const [userGmapLink, setUserGMapLink] = useState('');    
+    const [userGmapLink, setUserGmapLink] = useState('');    
     const [companyTva, setCompanyTva] = useState('');
     const [companyRcs, setCompanyRcs] = useState('');
     const [companySiren, setCompanySiren] = useState('');
@@ -101,6 +103,7 @@ const DataFicheCompany = () => {
             setCompanySiret(response.data.companySiret)
             setCompanySiren(response.data.companySiren)            
             setCompanyComment(response.data.companyComment)
+            handleUserGmapLink()
             
         })
 
@@ -122,6 +125,12 @@ const DataFicheCompany = () => {
       const handleChangeCompanyCountry = (e) => {        
         setCompanyCountry( e.value )
       }
+
+      const handleUserGmapLink = () => {
+            console.log("companyAddress="+companyAddress)
+            let addressGmap = formatGMapLink(companyAddress)
+            setUserGmapLink(addressGmap)
+        }
 
       const handleEditCompanyData = (e) => {
 
@@ -166,6 +175,8 @@ const DataFicheCompany = () => {
 
     }
 
+
+
     const handleDataCompanyType = (e) => {
 
         setCompanyType(e.value)
@@ -206,7 +217,7 @@ const DataFicheCompany = () => {
                     </ButtonGroup>
                 </div>
             </div>
-            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 bg-white p-3">
 
                 <div className="flex flex-col gap-9">
 
@@ -275,7 +286,7 @@ const DataFicheCompany = () => {
                             </div>
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google map <Link to={userGmapLink} target="_blank"><InsertLinkIcon /></Link>
+                                    Lien Google map <Link to={formatGMapLink(companyAddress)} target="_blank"><InsertLinkIcon /></Link>
                                 </label>
                             </div>   
                         </div>                        
@@ -334,7 +345,7 @@ const DataFicheCompany = () => {
                             </h3>
                         </div>
                         <div className="flex flex-col gap-5.5 p-6.5">      
-                            {companyComment}
+                            {parse(companyComment)}
                         </div>
                     </div>    
 

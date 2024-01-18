@@ -1,14 +1,53 @@
-const ListUserType = () => {
-    let dataUserType =  [ 
-                { value: "auto", label: "Auto-Entrepreneur" }, 
-                { value: "portage", label: "Portage" },
-                { value: "ei", label: "Entreprise individuelle" },
-                { value: "sarl", label: "SARL" },
-                { value: "eurl", label: "EURL" },
-                { value: "sas", label: "SAS" },
-                { value: "sasu", label: "SASU" }
-            ]
-    return dataUserType
+import { useState, useEffect } from "react"
+// import { useParams, useNavigate } from "react-router-dom";
+import Select from 'react-select'
+import TypeService from "../../services/TypeServices";
+
+
+const ListUserType = (params) => {
+
+    const [typesData, setTypesData] = useState<any[]>([]);
+    const [companyType, setCompanyType] = useState('');
+
+    useEffect(() => { 
+        getAllCompanyTypes()      
+        setCompanyType(params.currentType)        
+    }, []);
+
+
+    const getAllCompanyTypes = () => {
+        TypeService.getAll()
+            .then( response=>{                            
+                setTypesData(response.data['hydra:member'])
+            })
+    }
+
+    const listTypeFromDB = typesData.map(item => {
+        const container = {
+            value: null,
+            label: null
+        };
+    
+        container.value = item.id;
+        container.label = item.typeName;
+    
+        return container;
+    })
+
+    const handleCompanyType = (e) => {
+        setCompanyType( e.label )
+    }
+
+    return (
+        <>                
+            ct: {companyType}
+            <Select 
+                options={listTypeFromDB}                             
+                onChange={params.onChange}                  
+                value={listTypeFromDB.filter( option => option.label == params.currentType )}             
+            /> 
+        </>
+    )
 }
 
 export default ListUserType

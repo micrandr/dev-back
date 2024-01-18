@@ -89,6 +89,11 @@ const DataCategoryFicheCourse = () => {
 
     }
 
+    const handleLinkList = (e) => {
+        const urlList = '/courses/categories/'
+        navigate(urlList)
+    }    
+
     return (
 
         <>
@@ -104,6 +109,7 @@ const DataCategoryFicheCourse = () => {
                         aria-label="Disabled elevation buttons"
                     >
                         <Button onClick={handleLinkEdit}>Editer</Button>
+                        <Button onClick={handleLinkList}>Liste des catégories</Button>
                         <Button onClick={handleLinkNew}>Nouveau</Button>
                     </ButtonGroup>
                 </div>

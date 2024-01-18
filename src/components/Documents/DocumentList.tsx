@@ -12,9 +12,24 @@ import RequestPageIcon from '@mui/icons-material/RequestPage';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import GradingIcon from '@mui/icons-material/Grading';
 import DraftsIcon from '@mui/icons-material/Drafts';
+import FileUploader from "../Files/FileUploader";
+
+const API_URI = 'https://localhost:8000/'
+const UPLOAD_URSSAF = 'upload-files.php'
 
 const DocumentList = () => {
 
+
+    const handleClick = (e, data) => {
+
+        console.log(e)
+        console.log(data)
+
+    }
+
+    const handleUserFile = (e) => {
+        console.log("yes!!!")
+    }
     return (
 
         <List>
@@ -23,7 +38,8 @@ const DocumentList = () => {
                 <ListItemIcon>
                     <PictureAsPdfIcon />
                 </ListItemIcon>
-                <ListItemText primary="URSSAF" />
+                    <ListItemText primary="URSSAF" className="mr-10" /> 
+                    <FileUploader />
                 </ListItemButton>
             </ListItem>
             <ListItem disablePadding>

@@ -109,7 +109,7 @@ const DataListCompagnies = () => {
       {
         id: "actionColumnRoom",
         header: "Actions",
-        size: 1,
+        size: 1,        
         accessorFn: (row) => {
           const companyFicheUrl = "/compagnies/fiche/"+row?.id
           const companyEditUrl = "/compagnies/edit/"+row?.id

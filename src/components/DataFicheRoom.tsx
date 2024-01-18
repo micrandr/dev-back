@@ -11,8 +11,11 @@ import Checkbox from '@mui/material/Checkbox';
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { formatGMapLink } from "../common/Utils";
+import parse from 'html-react-parser'
+// import ReactQuill from 'react-quill';
+// import 'react-quill/dist/quill.snow.css';
+
 
 // const REGISTER_URL = '/rooms';
 
@@ -350,7 +353,7 @@ const DataFicheRoom = () => {
                             </div>                            
                             <div className="mb-4.5">
                                 <label className="mb-2.5 block text-black dark:text-white">
-                                    Lien Google Map <Link to={roomGmapLink} target="_blank"><InsertLinkIcon /></Link>
+                                    Lien Google Map <Link to={formatGMapLink(roomAddress)} target="_blank"><InsertLinkIcon /></Link>
                                 </label>                               
                             </div>   
 
@@ -427,9 +430,9 @@ const DataFicheRoom = () => {
                         </div>     
                         <div className="mb-4.5 px-5 mt-5">
                             <h3 className="mb-2.5 block text-black dark:text-white">
-                                Commentaire (contact)
+                                Commentaire (contact) {roomContactComment}
                             </h3>
-                            {roomContactComment}
+                            {parse(roomContactComment)}
                             
                         </div>   
                                         
