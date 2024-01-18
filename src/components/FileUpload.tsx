@@ -1,9 +1,7 @@
 import React, {useState} from 'react'
-import axios from '../api/axios';
+import axios, { API_URI_AXIOS } from '../api/axios';
 import UserService from '../services/UserServices';
-import { select } from '@material-tailwind/react';
-
-const API_URI = 'https://localhost:8000/'
+// import { select } from '@material-tailwind/react';
 
 const FileUpload = (params) => {
 
@@ -20,7 +18,7 @@ const FileUpload = (params) => {
         console.log(event)
 
         axios
-            .post( API_URI + "uploader.php", formData, {
+            .post( API_URI_AXIOS + "uploader.php", formData, {
                 
             })
             .then((response) => {

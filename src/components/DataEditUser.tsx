@@ -5,7 +5,7 @@ import Select from 'react-select'
 import countryList from 'react-select-country-list'
 // import SwitcherQuailopi from './SwitcherQuailopi';
 // import SwitcherTVA from './SwitcherTVA';
-import axios from '../api/axios';
+import axios, { API_URI_AXIOS, API_URI_IMAGES, API_URI_UPLOAD } from '../api/axios';
 import UserService from '../services/UserServices';
 import TypeService from "../services/TypeServices";
 import CompanyService from "../services/CompanyServices";
@@ -31,9 +31,6 @@ import FileUploaderFiles from "./Files/FileUploaderFiles";
 //import ListUserType from "./Lists/ListUserType";
 
 const USER_GET_URL = '/users/';
-//const API_URI = 'https://localhost:8000/'
-const API_URI = 'https://dev-api.formationbtp.fr/index.php/api/'
-
 
 const DataEditUser = () => {
 
@@ -166,7 +163,7 @@ const DataEditUser = () => {
         if (userId) {
             getUserData(userId);
             if( userPhoto != ''){
-                setUserPhotoLink(API_URI + 'uploads/' + userPhoto)
+                setUserPhotoLink( API_URI_UPLOAD + userPhoto)
             }
         }  
 
@@ -402,7 +399,7 @@ const DataEditUser = () => {
         setUserPhoto(file_name.name)        
 
         try {
-            await axios.post( API_URI + 'uploader.php',  formData, {
+            await axios.post( API_URI_AXIOS + 'uploader.php',  formData, {
                 headers: {
                             "Content-Type": "multipart/form-data"
                         }
@@ -424,10 +421,10 @@ const DataEditUser = () => {
 
 
     const displayUserPhoto = () => {
-        const DEFAULT_PHOTO = API_URI + '/images/default.png'
+        const DEFAULT_PHOTO = API_URI_IMAGES + 'default.png'
         if(userPhoto!=""){
             return (
-                <img src={API_URI+'/uploads/'+userPhoto} className="w-15" alt="" />
+                <img src={API_URI_UPLOAD + userPhoto} className="w-15" alt="" />
             )
         }
 
