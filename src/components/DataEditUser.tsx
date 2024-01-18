@@ -5,7 +5,7 @@ import Select from 'react-select'
 import countryList from 'react-select-country-list'
 // import SwitcherQuailopi from './SwitcherQuailopi';
 // import SwitcherTVA from './SwitcherTVA';
-import axios, { API_URI_AXIOS, API_URI_IMAGES, API_URI_UPLOAD } from '../api/axios';
+import axios, { API_URI_AXIOS, API_URI_IMAGES, API_URI_ROOT, API_URI_UPLOAD } from '../api/axios';
 import UserService from '../services/UserServices';
 import TypeService from "../services/TypeServices";
 import CompanyService from "../services/CompanyServices";
