@@ -1,8 +1,6 @@
 import {useState,useEffect} from "react"
-import axios from "../../api/axios"
+import axios, { API_URI_ROOT } from "../../api/axios"
 import UserService from "../../services/UserServices"
-
-const API_URL = 'https://localhost:8000/uploader.php'
 
 const CustomUploader = (params) => {
   
@@ -23,7 +21,7 @@ const CustomUploader = (params) => {
         formData.append('file', file_name)
         setUserPhoto(file_name.name)        
 
-        axios.post(API_URL,formData,
+        axios.post(API_URI_ROOT, formData,
             {                       
                 headers: {
                     "Content-Type": "multipart/form-data"

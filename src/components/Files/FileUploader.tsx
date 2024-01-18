@@ -7,14 +7,8 @@ import Uploady, {
 }
 from "@rpldy/uploady";
 import UserDataService from '../../services/UserServices';
-
 import UploadButton, { asUploadButton } from "@rpldy/upload-button";
-import { API_URI_AXIOS } from "../../api/axios";
-
-// import { asUploadButton } from "@rpldy/upload-button";
-
-//const API_URI = 'https://localhost:8000/'
-// const API_URI = 'https://dev-api.formationbtp.fr/index.php/api/'
+import { API_URI_AXIOS, API_URI_ROOT } from "../../api/axios";
 
 const CustomUploadContextButton = (data) => {
  
@@ -58,7 +52,7 @@ const FileUploader = (props) => {
   const [text, setText] = useState("Select file");
     return (
       <Uploady          
-        destination={{ url: API_URI_AXIOS + "/uploader.php" }}
+        destination={{ url: API_URI_ROOT + "/uploader.php" }}
       >
           
           <CustomUploadContextButton data={props.dataUser} />

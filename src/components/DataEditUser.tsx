@@ -399,7 +399,7 @@ const DataEditUser = () => {
         setUserPhoto(file_name.name)        
 
         try {
-            await axios.post( API_URI_AXIOS + 'uploader.php',  formData, {
+            await axios.post( API_URI_ROOT + 'uploader.php',  formData, {
                 headers: {
                             "Content-Type": "multipart/form-data"
                         }

@@ -10,7 +10,7 @@ from "@rpldy/uploady";
 import UserDataService from '../../services/UserServices';
 
 import UploadButton, { asUploadButton } from "@rpldy/upload-button";
-import { API_URI_AXIOS } from "../../api/axios";
+import { API_URI_AXIOS, API_URI_ROOT } from "../../api/axios";
 
 //const API_URI = 'https://localhost:8000/'
 // const API_URI = 'https://dev-api.formationbtp.fr/index.php/api/'
@@ -115,7 +115,7 @@ const FileUploaderFiles = (props) => {
   
     return (
       <Uploady          
-        destination={{ url: API_URI_AXIOS + "uploader-files.php" }}
+        destination={{ url: API_URI_ROOT + "uploader-files.php" }}
       >
           
           <CustomUploadContextButton data={props.dataUser} fname={props.fname} />
